@@ -1,0 +1,12 @@
+void naoRecursiva (t_lista *lp, FILE *fp )
+{
+  t_lista *aux1 = NULL, *aux2 = NULL;
+
+  while (aux2 != lp) {
+    aux1 = lp;
+    while (getProxElementoLista(aux1) != aux2)
+      aux1 = getProxElementoLista(aux1);
+    escreveUmaPalavra ((t_palavra *) getItemLista(aux1), fp);
+    aux2 = aux1;
+  }
+}
