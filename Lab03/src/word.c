@@ -251,7 +251,13 @@ void WriteFile(Tabword t, char *ficheiro, int numWords)
 
 void FreeWordArray(Tabword *t, int numWords)
 {
+  int i;
    /** -- free all memory allocated for table of words -- */
+
+   for ( i = 0; i < numWords; i++ ){
+     free(t[i]);
+   }
+   free(t);
 
    /*==== TODO ====*/
 
@@ -282,5 +288,20 @@ int LessAlphabetic(Item a, Item b)
  **  -- Add comparison functions for the remaining criteria --
 *************************************************************************/
 
-    /*==== TODO ====*/
+int  LessNumUses(Item a, Item b)
+{
+  if ( ((Sword *) a) -> numUses < ((Sword *) b ) -> numUses )
+    return 1;
+  else
+    return 0;
+}
 
+int  LessLength(Item a, Item b)
+{
+  if (strlen(((Sword *) a ) -> word) < strlen(((Sword *) b ) -> word))
+     return 1;
+  else
+     return 0;
+}
+
+    /*==== TODO ====*/

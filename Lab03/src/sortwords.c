@@ -111,11 +111,32 @@ int main(int argc, char **argv)
    if ((criterio == alphabetic) && (sentido == ascending)) {
 
       /*==== TODO ====*/
-      /* -- sort(....); -- */
-
+      sort((Item *) tabword, 0, numWords, LessAlphabetic);
    }
+
    /* other user options */
    /*==== TODO ====*/
+
+/*   else if ((criterio == alphabetic) && (sentido == descending)) {
+     sort((Item *) tabword, 0, numWords, LessAlphabetic);
+   }
+
+   else if ((criterio == occurrences) && (sentido == ascending)) {
+     sort((Item *) tabword, 0, numWords, LessNumUses);
+   }
+
+   else if ((criterio == occurrences) && (sentido == descending)) {
+     sort((Item *) tabword, 0, numWords, LessNumUses);
+   }
+
+   else if ((criterio == length) && (sentido == ascending)) {
+     sort((Item *) tabword, 0, numWords, LessLength);
+   }
+
+   else if ((criterio == length) && (sentido == descending)) {
+     sort((Item *) tabword, 0, numWords, LessLength);
+   }
+*/
 
    /* ---------------------------------------- */
    printf("Accesses count for sort: %d\n", OP_CNT);
@@ -124,6 +145,8 @@ int main(int argc, char **argv)
    /*  printf("Number of different words: %d\n", n_palavras);  */
 
    /* -- Insert code to call functions to free allocated memory -- */
+
+   FreeWordArray(&tabword, numWords);
 
    /*==== TODO ====*/
 
