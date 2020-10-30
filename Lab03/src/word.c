@@ -255,9 +255,10 @@ void FreeWordArray(Tabword *t, int numWords)
    /** -- free all memory allocated for table of words -- */
 
    for ( i = 0; i < numWords; i++ ){
-     free(t[i]);
+     free( (*t)[i] -> word );
+     free( (*t)[i] );
    }
-   free(t);
+   free(*t);
 
    /*==== TODO ====*/
 
@@ -283,17 +284,33 @@ int LessAlphabetic(Item a, Item b)
       return 0;
 }
 
-
 /*************************************************************************
  **  -- Add comparison functions for the remaining criteria --
 *************************************************************************/
 
+    /*==== TODO ====*/
+int MoreAlphabetic(Item a, Item b)
+{
+   if (strcasecmp(((Sword *) a)->word, ((Sword *) b)->word) < 0)
+      return 0;
+   else
+      return 1;
+}
+
 int  LessNumUses(Item a, Item b)
 {
-  if ( ((Sword *) a) -> numUses < ((Sword *) b ) -> numUses )
+  if (((Sword *) a)->numUses < ((Sword *) b)->numUses )
     return 1;
   else
     return 0;
+}
+
+int  MoreNumUses(Item a, Item b)
+{
+  if (((Sword *) a)->numUses < ((Sword *) b)->numUses )
+    return 0;
+  else
+    return 1;
 }
 
 int  LessLength(Item a, Item b)
@@ -304,4 +321,10 @@ int  LessLength(Item a, Item b)
      return 0;
 }
 
-    /*==== TODO ====*/
+int  MoreLength(Item a, Item b)
+{
+  if (strlen(((Sword *) a ) -> word) < strlen(((Sword *) b ) -> word))
+     return 0;
+  else
+     return 1;
+}

@@ -108,35 +108,23 @@ int main(int argc, char **argv)
    /*  Call the sorting function using as argument the
        appropriate comparison function selected by user option */
 
-   if ((criterio == alphabetic) && (sentido == ascending)) {
-
+   if ((criterio == alphabetic) && (sentido == ascending))
       /*==== TODO ====*/
-      sort((Item *) tabword, 0, numWords, LessAlphabetic);
-   }
+      sort((Item) tabword, 0, numWords - 1, LessAlphabetic);
 
    /* other user options */
    /*==== TODO ====*/
 
-/*   else if ((criterio == alphabetic) && (sentido == descending)) {
-     sort((Item *) tabword, 0, numWords, LessAlphabetic);
-   }
-
-   else if ((criterio == occurrences) && (sentido == ascending)) {
-     sort((Item *) tabword, 0, numWords, LessNumUses);
-   }
-
-   else if ((criterio == occurrences) && (sentido == descending)) {
-     sort((Item *) tabword, 0, numWords, LessNumUses);
-   }
-
-   else if ((criterio == length) && (sentido == ascending)) {
-     sort((Item *) tabword, 0, numWords, LessLength);
-   }
-
-   else if ((criterio == length) && (sentido == descending)) {
-     sort((Item *) tabword, 0, numWords, LessLength);
-   }
-*/
+   else if ((criterio == alphabetic) && (sentido == descending))
+      sort((Item *) tabword, 0, numWords - 1, MoreAlphabetic);
+   else if ((criterio == occurrences) && (sentido == ascending))
+      sort((Item *) tabword, 0, numWords - 1, LessNumUses);
+   else if ((criterio == occurrences) && (sentido == descending))
+      sort((Item *) tabword, 0, numWords - 1, MoreNumUses);
+   else if ((criterio == length) && (sentido == ascending))
+      sort((Item *) tabword, 0, numWords - 1, LessLength);
+   else if ((criterio == length) && (sentido == descending))
+      sort((Item *) tabword, 0, numWords - 1, MoreLength);
 
    /* ---------------------------------------- */
    printf("Accesses count for sort: %d\n", OP_CNT);
