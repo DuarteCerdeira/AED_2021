@@ -74,14 +74,20 @@ int partition(Item a[], int l, int r, int (*less) (Item, Item))
    int i, j;
    Item v;
    v = a[r]; i = l-1; j = r;
+   OP_CNT++;
    for (;;) {
-      while (less(a[++i], v)) ;
-      while (less(v, a[--j]))
+      while (less(a[++i], v))
+         OP_CNT++;
+      while (less(v, a[--j])){
+         OP_CNT++;
          if (j == l) break;
+      }
       if (i >= j) break;
       exch(a[i], a[j]);
+      OP_CNT+=2;
    }
    exch(a[i], a[r]);
+   OP_CNT+=2;
    return i;
 }
 
