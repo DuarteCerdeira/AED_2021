@@ -53,12 +53,16 @@ void sort(Item a[], int l, int r, int (*less) (Item, Item))
 
    for (i = l + 1; i <= r; i++) {
       Item v = a[i];
+      OP_CNT++;
       j = i;
       while (j > l && less(v, a[j - 1])) {
+         OP_CNT+=3;
          a[j] = a[j - 1];
          j--;
       }
+      OP_CNT++;
       a[j] = v;
+      OP_CNT++;
    }
    return;
 }
