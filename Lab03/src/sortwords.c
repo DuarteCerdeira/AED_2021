@@ -19,6 +19,8 @@
 
 #include "word.h"
 
+#define exch(A, B) {Item t = A; A = B; B = t; }
+
 enum sort_order {ascending, descending};
 
 enum sort_criteria {alphabetic, length, occurrences};
@@ -67,6 +69,35 @@ void sort(Item a[], int l, int r, int (*less) (Item, Item))
    return;
 }
 
+int partition(Item a[], int l, int r, int (*less) (Item, Item))
+{
+   int i, j;
+   Item v;
+   v = a[r]; i = l-1; j = r;
+   for (;;) {
+      while (less(a[++i], v)) ;
+      while (less(v, a[--j]))
+         if (j == l) break;
+      if (i >= j) break;
+      exch(a[i], a[j]);
+   }
+   exch(a[i], a[r]);
+   return i;
+}
+
+void quicksort(Item a[], int l, int r, int (*less) (Item, Item))
+{
+   int i;
+   
+   if (r <= l) return;
+   
+   i = partition(a, l, r, less);
+   quicksort(a, l, i-1, less);
+   quicksort(a, i+1, r, less);
+}
+
+
+
 
 /******************************************************************************
 * main ()
@@ -114,21 +145,27 @@ int main(int argc, char **argv)
 
    if ((criterio == alphabetic) && (sentido == ascending))
       /*==== TODO ====*/
-      sort((Item) tabword, 0, numWords - 1, LessAlphabetic);
+      /*sort((Item) tabword, 0, numWords - 1, LessAlphabetic);*/
+      quicksort((Item) tabword, 0, numWords - 1, LessAlphabetic);
 
    /* other user options */
    /*==== TODO ====*/
 
    else if ((criterio == alphabetic) && (sentido == descending))
-      sort((Item *) tabword, 0, numWords - 1, MoreAlphabetic);
+      /*sort((Item *) tabword, 0, numWords - 1, MoreAlphabetic);*/
+      quicksort((Item *) tabword, 0, numWords - 1, MoreAlphabetic);
    else if ((criterio == occurrences) && (sentido == ascending))
-      sort((Item *) tabword, 0, numWords - 1, LessNumUses);
+      /*sort((Item *) tabword, 0, numWords - 1, LessNumUses);*/
+      quicksort((Item *) tabword, 0, numWords - 1, LessNumUses);
    else if ((criterio == occurrences) && (sentido == descending))
-      sort((Item *) tabword, 0, numWords - 1, MoreNumUses);
+      /*sort((Item *) tabword, 0, numWords - 1, MoreNumUses);*/
+      quicksort((Item *) tabword, 0, numWords - 1, MoreNumUses);
    else if ((criterio == length) && (sentido == ascending))
-      sort((Item *) tabword, 0, numWords - 1, LessLength);
+      /*sort((Item *) tabword, 0, numWords - 1, LessLength);*/
+      quicksort((Item *) tabword, 0, numWords - 1, LessLength);
    else if ((criterio == length) && (sentido == descending))
-      sort((Item *) tabword, 0, numWords - 1, MoreLength);
+      /*sort((Item *) tabword, 0, numWords - 1, MoreLength);*/
+      quicksort((Item *) tabword, 0, numWords - 1, MoreLength);
 
    /* ---------------------------------------- */
    printf("Accesses count for sort: %d\n", OP_CNT);
