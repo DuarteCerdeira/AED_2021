@@ -19,6 +19,8 @@
 
 #include "word.h"
 
+#define exch(A, B) {Item t = A; A = B; B = t; }
+
 enum sort_order {ascending, descending};
 
 enum sort_criteria {alphabetic, length, occurrences};
@@ -28,7 +30,45 @@ int OP_CNT = 0;     /* global variable, to simplify complexity assessment */
 
 
 /******************************************************************************
- * sort ()
+ * partition ()
+ *
+ * Arguments: a - table of items do sort
+ *            l, r - limits on table to consider
+ *            less - item comparioson function
+ * Returns: position of pivot element
+ * Side effects: table is partially sorted
+ *
+ * Description: implements partition portion of quicksort algorithm
+ *           a[] - array of abstract type Item to be sorted
+ *           l - index of first element in the array to be sorted
+ *           r - last element of the array to be sorted
+ *           (*less)(Item,Item) - abstract type comparison function
+ *****************************************************************************/
+
+int partition(Item a[], int l, int r, int (*less) (Item, Item))
+{
+  int i, j;
+  Item v;
+  v = a[r]; i = l-1; j = r;
+  OP_CNT++;
+  for (;;) {
+     while (less(a[++i], v))
+        OP_CNT++;
+     while (less(v, a[--j])){
+        OP_CNT++;
+        if (j == l) break;
+     }
+     if (i >= j) break;
+     exch(a[i], a[j]);
+     OP_CNT += 2;
+  }
+  exch(a[i], a[r]);
+  OP_CNT += 2;
+  return i;
+}
+
+/******************************************************************************
+ * quicksort ()
  *
  * Arguments: a - table of items to sort
  *            l, r - limits on table to consider
@@ -36,7 +76,7 @@ int OP_CNT = 0;     /* global variable, to simplify complexity assessment */
  * Returns: (void)
  * Side-Effects: table is sorted in place
  *
- * Description: implements "some" sorting algorithm for abstract type (Item),
+ * Description: implements quicksort sorting algorithm for abstract type (Item),
  *       using also an abstract type comparison function (*less)
  *           a[] - array of abstract type Item to be sorted
  *           l - index of first element in the array to be sorted
@@ -44,29 +84,16 @@ int OP_CNT = 0;     /* global variable, to simplify complexity assessment */
  *           (*less)(Item,Item) - abstract type comparison function
  *****************************************************************************/
 
- void sort(Item a[], int l, int r, int (*less) (Item, Item))
- {
-    int i, j;
+void quicksort(Item a[], int l, int r, int (*less) (Item, Item))
+{
+  int i;
 
-    /*==== TODO ====*/
-    /* use    OP_CNT */
+  if (r <= l) return;
 
-    for (i = l + 1; i <= r; i++) {
-       Item v = a[i];
-       OP_CNT++;
-       j = i;
-       while (j > l && less(v, a[j - 1])) {
-          OP_CNT+=3;
-          a[j] = a[j - 1];
-          j--;
-       }
-       OP_CNT++;
-       a[j] = v;
-       OP_CNT++;
-    }
-    return;
- }
-
+  i = partition(a, l, r, less);
+  quicksort(a, l, i-1, less);
+  quicksort(a, i+1, r, less);
+}
 
 /******************************************************************************
 * main ()
@@ -114,21 +141,22 @@ int main(int argc, char **argv)
 
    if ((criterio == alphabetic) && (sentido == ascending))
       /*==== TODO ====*/
-      sort((Item) tabword, 0, numWords - 1, LessAlphabetic);
+      /*sort((Item) tabword, 0, numWords - 1, LessAlphabetic);*/
+      quicksort((Item) tabword, 0, numWords - 1, LessAlphabetic);
 
    /* other user options */
    /*==== TODO ====*/
 
    else if ((criterio == alphabetic) && (sentido == descending))
-      sort((Item *) tabword, 0, numWords - 1, MoreAlphabetic);
+      quicksort((Item *) tabword, 0, numWords - 1, MoreAlphabetic);
    else if ((criterio == occurrences) && (sentido == ascending))
-      sort((Item *) tabword, 0, numWords - 1, LessNumUses);
+      quicksort((Item *) tabword, 0, numWords - 1, LessNumUses);
    else if ((criterio == occurrences) && (sentido == descending))
-      sort((Item *) tabword, 0, numWords - 1, MoreNumUses);
+      quicksort((Item *) tabword, 0, numWords - 1, MoreNumUses);
    else if ((criterio == length) && (sentido == ascending))
-      sort((Item *) tabword, 0, numWords - 1, LessLength);
+      quicksort((Item *) tabword, 0, numWords - 1, LessLength);
    else if ((criterio == length) && (sentido == descending))
-      sort((Item *) tabword, 0, numWords - 1, MoreLength);
+      quicksort((Item *) tabword, 0, numWords - 1, MoreLength);
 
    /* ---------------------------------------- */
    printf("Accesses count for sort: %d\n", OP_CNT);
