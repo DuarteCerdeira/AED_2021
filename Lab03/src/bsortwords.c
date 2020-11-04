@@ -58,7 +58,7 @@ void bsort(Item a[], int l, int r, int (*less) (Item, Item))
        if (less(a[j], a[i])) {
          OP_CNT += 2;
          exch(a[j], a[i]);
-         OP_CNT += 2;
+         OP_CNT += 4;
        }
      }
    }
