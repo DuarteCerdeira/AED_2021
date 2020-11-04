@@ -159,7 +159,7 @@ int main(int argc, char **argv)
       quicksort((Item *) tabword, 0, numWords - 1, MoreLength);
 
    /* ---------------------------------------- */
-   printf("Accesses count for sort: %d\n", OP_CNT);
+   printf("Accesses count for sort: %d\n\n", OP_CNT);
 
    WriteFile(tabword, file, numWords);
    /*  printf("Number of different words: %d\n", n_palavras);  */

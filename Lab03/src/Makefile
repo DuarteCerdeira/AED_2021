@@ -1,7 +1,7 @@
 # AED, last modified abl 2020.10.21
 #
 # To compile progs:
-#    make   OR  make sorwords  OR qsortwords
+#    make   OR  make sorwords  OR qsortwords  OR bsortwords
 # To run tests:
 #    make t     OR: make qt     OR (Valgrind):  make tv  ETC
 #
@@ -21,6 +21,7 @@ SOURCES = word.c sortwords.c
 #   Objects  ('make' automatically compiles .c to .o)
 OBJECTS = word.o sortwords.o
 QOBJECTS = word.o qsortwords.o
+BOBJECTS = word.o bsortwords.o
 
 sortwords: $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $(OBJECTS)
@@ -36,8 +37,15 @@ word.o: word.c word.h defs.h
 
 qsortwords.o: qsortwords.c word.h defs.h
 
+bsortwords: $(BOBJECTS)
+		$(CC) $(CFLAGS) -o $@ $(BOBJECTS)
+
+word.o: word.c word.h defs.h
+
+bsortwords.o: qsortwords.c word.h defs.h
+
 clean:
-	rm -f *.o  sortwords qsortwords
+	rm -f *.o  sortwords qsortwords bsortwords
 
 
 FILES = $(shell ls ../test/*.txt)
@@ -69,3 +77,14 @@ qtt:
 	for F in ${FILES}; do  time ./qsortwords $${F} ; done;
 
 
+
+bt:
+	for F in ${FILES}; do  ./bsortwords $${F} ; done;
+
+
+btv:
+	for F in ${FILES}; do ${VALG} ./bsortwords $${F} ; done;
+
+
+btt:
+	for F in ${FILES}; do  time ./bsortwords $${F} ; done;

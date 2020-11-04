@@ -30,9 +30,9 @@ int OP_CNT = 0;     /* global variable, to simplify complexity assessment */
 
 
 /******************************************************************************
- * sort ()
+ * bsort ()
  *
- * Arguments: a - table of items to sort
+ * Arguments: a - table of items to bsort
  *            l, r - limits on table to consider
  *            less - item comparison function
  * Returns: (void)
@@ -46,26 +46,23 @@ int OP_CNT = 0;     /* global variable, to simplify complexity assessment */
  *           (*less)(Item,Item) - abstract type comparison function
  *****************************************************************************/
 
-void sort(Item a[], int l, int r, int (*less) (Item, Item))
+void bsort(Item a[], int l, int r, int (*less) (Item, Item))
 {
    int i, j;
 
    /*==== TODO ====*/
    /* use    OP_CNT */
 
-   for (i = l + 1; i <= r; i++) {
-      Item v = a[i];
-      OP_CNT++;
-      j = i;
-      while (j > l && less(v, a[j - 1])) {
-         OP_CNT+=3;
-         a[j] = a[j - 1];
-         j--;
-      }
-      OP_CNT++;
-      a[j] = v;
-      OP_CNT++;
+   for (i = l; i <= r - 1; i++) {
+     for (j = i + 1; j <= r; j++) {
+       if (less(a[j], a[i])) {
+         OP_CNT += 2;
+         exch(a[j], a[i]);
+         OP_CNT += 2;
+       }
+     }
    }
+
    return;
 }
 /******************************************************************************
@@ -114,24 +111,24 @@ int main(int argc, char **argv)
 
    if ((criterio == alphabetic) && (sentido == ascending))
       /*==== TODO ====*/
-      sort((Item) tabword, 0, numWords - 1, LessAlphabetic);
+      bsort((Item) tabword, 0, numWords - 1, LessAlphabetic);
 
    /* other user options */
    /*==== TODO ====*/
 
    else if ((criterio == alphabetic) && (sentido == descending))
-      sort((Item *) tabword, 0, numWords - 1, MoreAlphabetic);
+      bsort((Item *) tabword, 0, numWords - 1, MoreAlphabetic);
    else if ((criterio == occurrences) && (sentido == ascending))
-      sort((Item *) tabword, 0, numWords - 1, LessNumUses);
+      bsort((Item *) tabword, 0, numWords - 1, LessNumUses);
    else if ((criterio == occurrences) && (sentido == descending))
-      sort((Item *) tabword, 0, numWords - 1, MoreNumUses);
+      bsort((Item *) tabword, 0, numWords - 1, MoreNumUses);
    else if ((criterio == length) && (sentido == ascending))
-      sort((Item *) tabword, 0, numWords - 1, LessLength);
+      bsort((Item *) tabword, 0, numWords - 1, LessLength);
    else if ((criterio == length) && (sentido == descending))
-      sort((Item *) tabword, 0, numWords - 1, MoreLength);
+      bsort((Item *) tabword, 0, numWords - 1, MoreLength);
 
    /* ---------------------------------------- */
-   printf("Accesses count for sort: %d\n\n", OP_CNT);
+   printf("Accesses count for bsort: %d\n\n", OP_CNT);
 
    WriteFile(tabword, file, numWords);
    /*  printf("Number of different words: %d\n", n_palavras);  */
