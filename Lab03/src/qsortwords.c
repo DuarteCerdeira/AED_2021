@@ -60,10 +60,10 @@ int partition(Item a[], int l, int r, int (*less) (Item, Item))
      }
      if (i >= j) break;
      exch(a[i], a[j]);
-     OP_CNT += 2;
+     OP_CNT += 4;
   }
   exch(a[i], a[r]);
-  OP_CNT += 2;
+  OP_CNT += 4;
   return i;
 }
 
