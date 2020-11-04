@@ -19,6 +19,8 @@
 
 #include "word.h"
 
+#define exch(A, B) {Item t = A; A = B; B = t; }
+
 enum sort_order {ascending, descending};
 
 enum sort_criteria {alphabetic, length, occurrences};
@@ -44,30 +46,28 @@ int OP_CNT = 0;     /* global variable, to simplify complexity assessment */
  *           (*less)(Item,Item) - abstract type comparison function
  *****************************************************************************/
 
- void sort(Item a[], int l, int r, int (*less) (Item, Item))
- {
-    int i, j;
+void sort(Item a[], int l, int r, int (*less) (Item, Item))
+{
+   int i, j;
 
-    /*==== TODO ====*/
-    /* use    OP_CNT */
+   /*==== TODO ====*/
+   /* use    OP_CNT */
 
-    for (i = l + 1; i <= r; i++) {
-       Item v = a[i];
-       OP_CNT++;
-       j = i;
-       while (j > l && less(v, a[j - 1])) {
-          OP_CNT+=3;
-          a[j] = a[j - 1];
-          j--;
-       }
-       OP_CNT++;
-       a[j] = v;
-       OP_CNT++;
-    }
-    return;
- }
-
-
+   for (i = l + 1; i <= r; i++) {
+      Item v = a[i];
+      OP_CNT++;
+      j = i;
+      while (j > l && less(v, a[j - 1])) {
+         OP_CNT+=3;
+         a[j] = a[j - 1];
+         j--;
+      }
+      OP_CNT++;
+      a[j] = v;
+      OP_CNT++;
+   }
+   return;
+}
 /******************************************************************************
 * main ()
 *
