@@ -6,7 +6,7 @@
 struct edge {
   int v1;
   int v2;
-  Item weight;
+  int weight;
 };
 
 struct graph {
@@ -16,7 +16,7 @@ struct graph {
   int **adjmatrix;
 };
 
-Edge *EDGE(int v1, int v2, Item cost)
+Edge *EDGE(int v1, int v2, int cost)
 {
   Edge *E = (Edge *) malloc(sizeof(struct edge));
   E -> v1 = v1;
@@ -33,14 +33,37 @@ Graph *GRAPHinit(int V)
   G -> V = V;
   G -> E = 0;
   G -> valency = (int *) malloc(V * sizeof(int));
-  G -> adjmatrix = (Edge **) malloc(V * sizeof(int *));
+  G -> adjmatrix = (int **) malloc(V * sizeof(int *));
   for (i = 0; i < V; i++) {
+    G -> adjmatrix[i] = (int *) malloc(V * sizeof(int));
     for (j = 0; j < V; j++)
       G -> adjmatrix[i][j] = 0;
     G -> valency[i] = 0;
   }
 
   return G;
+}
+
+void GRAPHfill(Graph **G, char *ficheiro)
+{
+  FILE *f;
+  int V = 0;
+  int c = 0;
+  int i, j;
+
+  f = fopen(ficheiro, "r");
+
+  fscanf(f, "%d", &V);
+
+  *G = GRAPHinit(V);
+
+  for (i = 0; i < V; i++)
+    for (j = 0; j < V; j++) {
+      fscanf(f, "%d", &c);
+      if (c != 0 && i < j)
+        GRAPHinsertE(*G, EDGE(i, j, c));
+    }
+  fclose(f);
 }
 
 void GRAPHinsertE(Graph *G, Edge *E)
@@ -54,21 +77,25 @@ void GRAPHinsertE(Graph *G, Edge *E)
   G -> adjmatrix[j][i] = w;
   G -> valency[j]++;
   G -> E++;
+
+  free(E);
 }
 
-void GRAPHprint(Graph *G, char **ficheiro)
+void GRAPHprint(Graph *G, char *ficheiro)
 {
   int i, j;
-  FILE *fpt;
+  FILE *f;
 
-  fpt = fopen(ficheiro, "w");
+  f = fopen(ficheiro, "w");
+
+  fprintf(f, "%d %d\n", G -> V, G -> E);
 
   for (i = 0; i < G -> V; i++)
-    for (J = 0; j < G -> V; j++)
+    for (j = 0; j < G -> V; j++) {
       if (G -> adjmatrix[i][j] != 0 && i < j)
-        fprintf(fpt, "%d %d %d\n", i, j, G -> adjmatrix[i][j]);
-
-  fclose(fpt);
+        fprintf(f, "%d %d %d\n", i, j, G -> adjmatrix[i][j]);
+    }
+  fclose(f);
 }
 
 void GRAPHdestroy(Graph *G)

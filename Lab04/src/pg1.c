@@ -7,40 +7,43 @@
 int main(int argc, char **argv)
 {
   char *ficheiroIn;
-  char *ficheiroName
+  char *ficheiroName;
   char *ficheiroOut;
-  int ficheiroSize;
+  int sizeFicheiro;
 
-  Graph *grafo;
-  Edge *aresta;
-
-  FILE *in;
+  Graph *grafo = NULL;
 
   if (argc < 2) {
-    printf("Argumento errado");
+    printf("Argumento errado\n");
     exit(0);
   }
 
   ficheiroIn = (char *) malloc(strlen(argv[1]) + 1);
-  ficheiroName = (char *) malloc(ficheiroSize + 1);
-  ficheiroOut = (char *) malloc(ficheiroSize + strlen(".edge") + 1);
-
   strcpy(ficheiroIn, argv[1]);
-  if (strmcp(strrchr(ficheiroIn, '.'), ".adj") != 0) {
-    printf("Extensao de ficheiro errada");
+
+  if (strcmp( strrchr(ficheiroIn, '.'), ".adj" ) != 0) {
+    printf("Extensão de ficheiro errada\n");
     exit(0);
   }
 
-  ficheiroSize = strlen(ficheiroIn) - strlen(".adj");
+  GRAPHfill(&grafo, ficheiroIn);
 
-  strncpy(ficheiroName, ficheiroIn, ficheiroSize);
-  strcpy(ficheiroOut, ficheiroName);
-  strcat(ficheiroOut, ".edge");
+  sizeFicheiro = strlen(ficheiroIn) - strlen(".adj");
 
-  in = fopen(ficheiroIn, "r");
+  ficheiroName = (char *) malloc( sizeFicheiro + 1 );
+  strncpy( ficheiroName, ficheiroIn, sizeFicheiro );
+  ficheiroName[sizeFicheiro] = '\0';
 
+  ficheiroOut = (char *) malloc( sizeFicheiro + strlen(".edge") + 1 );
+  strcpy( ficheiroOut, ficheiroName );
+  ficheiroOut = strcat( ficheiroOut, ".edge" );
 
+  GRAPHprint(grafo, ficheiroOut);
 
+  free(ficheiroIn);
+  free(ficheiroName);
+  free(ficheiroOut);
+  GRAPHdestroy(grafo);
 
   return 0;
 }

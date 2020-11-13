@@ -5,14 +5,15 @@
 
 typedef struct edge Edge;
 
-Edge *EDGE(int, int, Item);
+Edge *EDGE(int, int, int);
 
 typedef struct graph Graph;
 
 Graph *GRAPHinit(int);
 
+void GRAPHfill(Graph **, char *);
 void GRAPHinsertE(Graph *, Edge *);
-void GRAPHprint(Graph *, char **);
-void GRAPGdestroy(Graph *);
+void GRAPHprint(Graph *, char *);
+void GRAPHdestroy(Graph *);
 
 #endif
