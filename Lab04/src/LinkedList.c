@@ -20,10 +20,10 @@
  *
  *****************************************************************************/
 
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-#include"LinkedList.h"
+#include "LinkedList.h"
 
 /*
  *  Data Type: LinkedListStruct
@@ -35,9 +35,24 @@
 struct LinkedListStruct
 {
     Item this;
+    Item weight;
     LinkedList *next;
 };
 
+struct edge
+{
+    int v1;
+    int v2;
+    int weight;
+};
+
+struct graph
+{
+    int V;
+    int E;
+    int *valency;
+    LinkedList **adjmatrix;
+};
 
 /*
  *  Function:
@@ -52,11 +67,10 @@ struct LinkedListStruct
  *  Return value:
  *    Returns the pointer to a new linked list.
  */
-LinkedList * initLinkedList(void)
+LinkedList *initLinkedList(void)
 {
     return NULL;
 }
-
 
 /*
  *  Function:
@@ -74,20 +88,19 @@ LinkedList * initLinkedList(void)
  *  Return value:
  *    None
  */
-void freeLinkedList(LinkedList *first, void (* freeItemFnt)(Item))
+void freeLinkedList(LinkedList *first, void (*freeItemFnt)(Item))
 {
     LinkedList *aux, *next;
 
     /* Cycle from the first to the last element           */
-    for(aux = first; aux != NULL; aux = next)
+    for (aux = first; aux != NULL; aux = next)
     {
-        next = aux->next;           /* Keep track of the next node */
-        freeItemFnt(aux->this);     /* Free current item data with passed function */
-        free(aux);                  /* Free current node    */
+        next = aux->next;       /* Keep track of the next node */
+        freeItemFnt(aux->this); /* Free current item data with passed function */
+        free(aux);              /* Free current node    */
     }
     return;
 }
-
 
 /*
  *  Function:
@@ -109,13 +122,13 @@ int lengthLinkedList(LinkedList *first)
     int counter;
 
     /* Length determination cycle                                   */
-    for(aux = first, counter = 0;
-        aux!=NULL;
-        counter++, aux = aux->next);
+    for (aux = first, counter = 0;
+         aux != NULL;
+         counter++, aux = aux->next)
+        ;
 
     return counter;
 }
-
 
 /*
  *  Function:
@@ -133,11 +146,10 @@ int lengthLinkedList(LinkedList *first)
  *   is returned in case the current node is empty or there is no
  *   node following the current node.
  */
-LinkedList * getNextNodeLinkedList(LinkedList * node)
+LinkedList *getNextNodeLinkedList(LinkedList *node)
 {
-  return ((node == NULL) ? NULL : node->next);
+    return ((node == NULL) ? NULL : node->next);
 }
-
 
 /*
  *  Function:
@@ -156,13 +168,11 @@ LinkedList * getNextNodeLinkedList(LinkedList * node)
  */
 Item getItemLinkedList(LinkedList *node)
 {
-    if(node == NULL)  /* Check that node is not empty */
+    if (node == NULL) /* Check that node is not empty */
         return NULL;
 
     return node->this;
 }
-
-
 
 /*
  *  Function:
@@ -185,10 +195,10 @@ LinkedList *insertUnsortedLinkedList(LinkedList *next, Item this)
     LinkedList *new;
 
     /* Memory allocation */
-    new = (LinkedList *) malloc(sizeof(LinkedList));
+    new = (LinkedList *)malloc(sizeof(LinkedList));
 
     /* Check memory allocation errors */
-    if(new == NULL)
+    if (new == NULL)
         return NULL;
 
     /* Initialize new node */
@@ -197,7 +207,6 @@ LinkedList *insertUnsortedLinkedList(LinkedList *next, Item this)
 
     return new;
 }
-
 
 /*
  *  Function:
@@ -227,46 +236,43 @@ LinkedList *insertUnsortedLinkedList(LinkedList *next, Item this)
  *  Return value:
  *    Returns the pointer to the first node of the sorted linked list.
  */
-LinkedList * insertSortedLinkedList(LinkedList *first,
-                Item item,
-                int (* compareItems) (Item it1, Item it2),
-                int * err)
+LinkedList *insertSortedLinkedList(LinkedList *first, Item item, int (*compareItems)(Item it1, Item it2),int *err)
 {
-    LinkedList  *new, *aux;
+    LinkedList *new, *aux;
 
     /* alloc and check */
-    new = (LinkedList *) malloc(sizeof(LinkedList));
-    if(new == NULL)
+    new = (LinkedList *)malloc(sizeof(LinkedList));
+    if (new == NULL)
         return NULL;
-    
-    new->this = item;           /* Initialize new node  */
+
+    new->this = item; /* Initialize new node  */
     new->next = NULL;
 
-    if (first == NULL)          /* first item in list */
+    if (first == NULL) /* first item in list */
     {
         return new;
     }
     /* list not empty, insertion sort */
     /* insert at head */
-    if ((compareItems(item, first->this) <= 0) )
+    if ((compareItems(item, first->this) <= 0))
     {
         new->next = first;
         return new;
     }
     /* second etc */
     aux = first;
-    while(aux != NULL)
+    while (aux != NULL)
     {
         if (aux->next != NULL)
         {
-            if ( compareItems(item, aux->next->this) <= 0 )
+            if (compareItems(item, aux->next->this) <= 0)
             {
                 new->next = aux->next;
                 aux->next = new;
                 return first;
             }
         }
-        else        /* none left, insert in tail */
+        else /* none left, insert in tail */
         {
             aux->next = new;
             return first;
@@ -275,3 +281,72 @@ LinkedList * insertSortedLinkedList(LinkedList *first,
     }
     return NULL;
 }
+
+/*void GRAPHprint(Grafo *G, char *ficheiro)
+{
+  int i, j;
+  FILE *f;
+
+  f = fopen(ficheiro, "w");
+
+  fprintf(f, "%d %d\n", G -> V, G -> E);
+
+  for (i = 0; i < G -> V; i++)
+    for (j = 0; j < G -> V; j++) {
+      if (G -> adjmatrix[i][j] != 0 && i < j)
+        fprintf(f, "%d %d %d\n", i, j, G -> adjmatrix[i][j]);
+    }
+  fclose(f);
+}
+
+void GRAPHfill(Grafo *G, char *ficheiro)
+{
+  FILE *f;
+  int V = 0;
+  int c = 0;
+  int i, j;
+
+  f = fopen(ficheiro, "r");
+
+
+  fclose(f);
+}
+
+void GRAPHinsertE(Grafo *G, Edge *E)
+{
+  int i = E -> v1;
+  int j = E -> v2;
+  int w = E -> weight;
+
+
+
+  free(E);
+}
+
+void GRAPHprint(Grafo *G, char *ficheiro)
+{
+  int i, j;
+  FILE *f;
+
+  f = fopen(ficheiro, "w");
+
+  fprintf(f, "%d %d\n", G -> V, G -> E);
+
+  for (i = 0; i < G -> V; i++)
+    for (j = 0; j < G -> V; j++) {
+      if (G -> adjmatrix[i][j] != 0 && i < j)
+        fprintf(f, "%d %d %d\n", i, j, G -> adjmatrix[i][j]);
+    }
+  fclose(f);
+}
+
+void GRAPHdestroy(Grafo *G)
+{
+  int i;
+
+  for (i = 0; i < G -> V; i++)
+    free(G -> adjmatrix[i]);
+  free(G -> adjmatrix);
+  free(G -> valency);
+  free(G);
+}*/

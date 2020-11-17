@@ -54,7 +54,10 @@
  */
 typedef struct LinkedListStruct LinkedList;
 
+typedef struct edge Edge;
+Edge EDGE(int, int, int);
 
+typedef struct graph Grafo;
 /*
  *  Function:
  *    initLinkedList
@@ -203,6 +206,6 @@ LinkedList * insertSortedLinkedList(LinkedList * first,
                            (Item item1, Item item2),
                            int * err);
 
-
+void GRAPHprint(Grafo *G, char *ficheiro);
 /* End of: Protect multiple inclusions                              */
 #endif
