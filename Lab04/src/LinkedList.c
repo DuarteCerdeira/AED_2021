@@ -180,7 +180,7 @@ LinkedList *getNextNodeLinkedList(LinkedList *node)
 Item getItemLinkedList(LinkedList *node)
 {
     if (node == NULL) /* Check that node is not empty */
-        return NULL;
+        return 0;
 
     return node->this;
 }
@@ -338,7 +338,7 @@ Grafo *INITgrafo(int vertice)
     return G;
 }
 
-void GRAPHfill(Grafo *G, char *ficheiro)
+void GRAPHfill(Grafo **G, char *ficheiro)
 {
   FILE *f;
   int V = 0, vertice1, vertice2;
@@ -351,7 +351,7 @@ void GRAPHfill(Grafo *G, char *ficheiro)
   if(fscanf(f, "%d %d", &V, &c)!=2)
     return;
 
-  G=INITgrafo(V);
+  *G=INITgrafo(V);
 
   for (i = 0; i < c; i++)
   {
@@ -359,7 +359,7 @@ void GRAPHfill(Grafo *G, char *ficheiro)
             return;
     e = EDGE(vertice1, vertice2, custo);
 
-    GRAPHinsertE(G, e);
+    GRAPHinsertE(*G, e);
         /*Free do espaco alocado */
     free(e);
   }
@@ -376,17 +376,24 @@ void GRAPHinsertE(Grafo *G, Edge *e)
     G->valency[aux]++;
     G->valency[aux1]++;
 
-    G->E++;  
+    G->E++;
 }
 
 void GRAPHprint(Grafo *G, char *ficheiro)
 {
-  int i=0, j=0;
+  int i;
+  LinkedList *h;
   FILE *f;
 
   f = fopen(ficheiro, "w+");
 
   fprintf(f, "%d\n", G->V);
+
+  for (i = 0; i < G -> V; i++) {
+    for(h = G -> adj[i]; h != NULL; h = getNextNodeLinkedList(h))
+      fprintf(f, "%d:%d ", getItemLinkedList(h), h -> weight);
+    fprintf(f, "-1\n");
+  }
 
   fclose(f);
 }

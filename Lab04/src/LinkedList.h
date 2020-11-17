@@ -207,7 +207,7 @@ LinkedList * insertSortedLinkedList(LinkedList * first,
                            int * err);
 
 void GRAPHprint(Grafo *G, char *ficheiro);
-void GRAPHfill(Grafo *G, char *ficheiro);
+void GRAPHfill(Grafo **G, char *ficheiro);
 void GRAPHinsertE(Grafo *G, Edge *E);
 void GRAPHdestroy(Grafo *G);
 

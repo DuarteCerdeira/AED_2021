@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     }
 
     /*Codigo criacao estrutura*/
-    GRAPHfill(grafo,ficheiroIn);
+    GRAPHfill(&grafo,ficheiroIn);
 
     /*Codigo  para escrita de ficheiro*/
     sizeFicheiro = strlen(ficheiroIn) - strlen(".edge");
