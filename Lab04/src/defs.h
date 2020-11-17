@@ -25,6 +25,6 @@
  *
  *  Description: Pointer to void.
  */
-typedef int *Item;
+typedef void *Item;
 
 #endif

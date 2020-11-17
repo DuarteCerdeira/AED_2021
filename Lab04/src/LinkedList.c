@@ -304,22 +304,6 @@ Edge *EDGE(int v1,int v2, int weight)
     return v;
 }
 
-/*void GRAPHprint(Grafo *G, char *ficheiro)
-{
-  int i, j;
-  FILE *f;
-
-  f = fopen(ficheiro, "w");
-
-  fprintf(f, "%d %d\n", G -> V, G -> E);
-
-  for (i = 0; i < G -> V; i++)
-    for (j = 0; j < G -> V; j++) {
-      if (G -> adjmatrix[i][j] != 0 && i < j)
-        fprintf(f, "%d %d %d\n", i, j, G -> adjmatrix[i][j]);
-    }
-  fclose(f);
-}*/
 
 LinkedList *INICIALIZAR(int vertice, LinkedList *proximo, int cost)
 {
@@ -333,18 +317,6 @@ LinkedList *INICIALIZAR(int vertice, LinkedList *proximo, int cost)
     return pointer;
 }
 
-/*--------------------------------------------------------------------------
-Função:*VERTICESgrafo
-
-Argumentos:
-    - int vertice
-
-Retorna:
-    - Ponteiro para a representação escolhida para o grafo
-
-Efeitos esperados:
-    - Alocacao e Inicaliazao do grafo 
-----------------------------------------------------------------------------*/
 Grafo *INITgrafo(int vertice)
 {
     /*Declaracao e alocacao da representacao do grafo*/
@@ -372,34 +344,34 @@ void GRAPHfill(Grafo *G, char *ficheiro)
   int V = 0, vertice1, vertice2;
   int c = 0, custo;
   int i;
-  Edge *E=NULL;
+  Edge *e=NULL;
 
   f = fopen(ficheiro, "r");
 
-  if(fscanf(ficheiro, "%d %d", &V, &c)!=2)
+  if(fscanf(f, "%d %d", &V, &c)!=2)
     return;
 
   G=INITgrafo(V);
 
-  for (i = 0; i < E; i++)
+  for (i = 0; i < c; i++)
   {
-    if(fscanf(ficheiro, "%d %d %d", &vertice1, &vertice2, &custo)!=3)
+    if(fscanf(f, "%d %d %d", &vertice1, &vertice2, &custo)!=3)
             return;
-    E = EDGE(vertice1, vertice2, custo);
+    e = EDGE(vertice1, vertice2, custo);
 
-    GRAPHinsertE(G, E);
-        /*Free do espaco alocado*/
-    free(E);
+    GRAPHinsertE(G, e);
+        /*Free do espaco alocado */
+    free(e);
   }
   fclose(f);
 }
 
-void GRAPHinsertE(Grafo *G, Edge *E)
+void GRAPHinsertE(Grafo *G, Edge *e)
 {
-    int aux = E->v1, aux1 = E->v2;
+    int aux = e->v1, aux1 = e->v2;
 
-    G->adj[aux] = INICIALIZAR(aux1, G->adj[aux], E->weight);
-    G->adj[aux1] = INICIALIZAR(aux, G->adj[aux1], E->weight);
+    G->adj[aux] = INICIALIZAR(aux1, G->adj[aux], e->weight);
+    G->adj[aux1] = INICIALIZAR(aux, G->adj[aux1], e->weight);
 
     G->valency[aux]++;
     G->valency[aux1]++;
@@ -414,7 +386,7 @@ void GRAPHprint(Grafo *G, char *ficheiro)
 
   f = fopen(ficheiro, "w+");
 
-  fprintf(f, "%d %d\n", G -> V, G -> E);
+  fprintf(f, "%d\n", G->V);
 
   fclose(f);
 }
