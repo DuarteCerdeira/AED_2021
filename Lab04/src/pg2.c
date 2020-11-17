@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     /*Codigo criacao estrutura*/
     GRAPHfill(grafo,ficheiroIn);
 
-    /*Codigo para escrita de ficheiro*/
+    /*Codigo  para escrita de ficheiro*/
     sizeFicheiro = strlen(ficheiroIn) - strlen(".edge");
 
     ficheiroName = (char *) malloc( sizeFicheiro + 1 );

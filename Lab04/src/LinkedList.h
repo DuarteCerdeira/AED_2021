@@ -207,9 +207,12 @@ LinkedList * insertSortedLinkedList(LinkedList * first,
                            int * err);
 
 void GRAPHprint(Grafo *G, char *ficheiro);
-GRAPHfill(Grafo *G, char *ficheiro);
+void GRAPHfill(Grafo *G, char *ficheiro);
 void GRAPHinsertE(Grafo *G, Edge *E);
 void GRAPHprint(Grafo *G, char *ficheiro);
 void GRAPHdestroy(Grafo *G);
-/* End of: Protect multiple inclusions                              */
+
+Grafo *INITgrafo(int vertice);
+LinkedList *INICIALIZAR(int vertice, LinkedList *proximo, int cost);
+/* End of: Protect multiple inclusions*/
 #endif

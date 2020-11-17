@@ -321,19 +321,65 @@ Edge *EDGE(int v1,int v2, int weight)
   fclose(f);
 }*/
 
-GRAPHfill(Grafo *G, char *ficheiro)
+LinkedList *INICIALIZAR(int vertice, LinkedList *proximo, int cost)
+{
+    /*Declaracao de um auxiliar e consequente alocacao memoria*/
+    LinkedList *pointer = (LinkedList *)malloc(sizeof(struct LinkedListStruct));
+    /*Inicailizacao*/
+    pointer->this = vertice;
+    pointer->next = proximo;
+    pointer->weight = cost;
+    /*retorno do nodo refernente ao vertice*/
+    return pointer;
+}
+
+/*--------------------------------------------------------------------------
+Função:*VERTICESgrafo
+
+Argumentos:
+    - int vertice
+
+Retorna:
+    - Ponteiro para a representação escolhida para o grafo
+
+Efeitos esperados:
+    - Alocacao e Inicaliazao do grafo 
+----------------------------------------------------------------------------*/
+Grafo *INITgrafo(int vertice)
+{
+    /*Declaracao e alocacao da representacao do grafo*/
+    int i;
+    Grafo *G = (Grafo *)malloc(sizeof(struct graph));
+    /*Inicializacao*/
+    G->V = vertice;
+    G->E = 0;
+    //Alocacao da lista de adjacencia
+    G->adj = (LinkedList **)malloc(vertice * sizeof(LinkedList *));
+    G->valency = (int *)malloc(vertice * sizeof(int));
+    /*Inicializacao de cada posicao do vetor de vertices*/
+    for (i = 0; i < vertice; i++)
+    {
+        G->adj[i] = NULL;
+        G->valency[i] = 0;
+    }
+    /*retorno*/
+    return G;
+}
+
+void GRAPHfill(Grafo *G, char *ficheiro)
 {
   FILE *f;
   int V = 0, vertice1, vertice2;
-  int E = 0, custo;
-  int i, j;
-  Grafo *G=NULL;
+  int c = 0, custo;
+  int i;
   Edge *E=NULL;
 
   f = fopen(ficheiro, "r");
 
-  if(fscanf(ficheiro, "%d %d", &V, &E)!=2)
+  if(fscanf(ficheiro, "%d %d", &V, &c)!=2)
     return;
+
+  G=INITgrafo(V);
 
   for (i = 0; i < E; i++)
   {
@@ -341,7 +387,7 @@ GRAPHfill(Grafo *G, char *ficheiro)
             return;
     E = EDGE(vertice1, vertice2, custo);
 
-    INSERCAOaresta(G, E);
+    GRAPHinsertE(G, E);
         /*Free do espaco alocado*/
     free(E);
   }
@@ -361,22 +407,17 @@ void GRAPHinsertE(Grafo *G, Edge *E)
     G->E++;  
 }
 
-/*void GRAPHprint(Grafo *G, char *ficheiro)
+void GRAPHprint(Grafo *G, char *ficheiro)
 {
-  int i, j;
+  int i=0, j=0;
   FILE *f;
 
-  f = fopen(ficheiro, "w");
+  f = fopen(ficheiro, "w+");
 
   fprintf(f, "%d %d\n", G -> V, G -> E);
 
-  for (i = 0; i < G -> V; i++)
-    for (j = 0; j < G -> V; j++) {
-      if (G -> adjmatrix[i][j] != 0 && i < j)
-        fprintf(f, "%d %d %d\n", i, j, G -> adjmatrix[i][j]);
-    }
   fclose(f);
-}*/
+}
 
 void GRAPHdestroy(Grafo *G)
 {
