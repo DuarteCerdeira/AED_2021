@@ -51,7 +51,7 @@ struct graph
     int V;
     int E;
     int *valency;
-    LinkedList **adjmatrix;
+    LinkedList **adj;
 };
 
 /*
@@ -100,6 +100,17 @@ void freeLinkedList(LinkedList *first, void (*freeItemFnt)(Item))
         free(aux);              /* Free current node    */
     }
     return;
+}
+
+void libertaLista(LinkedList *lp)
+{
+    LinkedList *pointer, *novacabeca; /* auxiliar pointers to travel through the list */
+
+    for (pointer = lp; pointer != NULL; pointer = novacabeca)
+    {
+        novacabeca = pointer->next;
+        free(pointer);
+    }
 }
 
 /*
@@ -282,6 +293,17 @@ LinkedList *insertSortedLinkedList(LinkedList *first, Item item, int (*compareIt
     return NULL;
 }
 
+Edge *EDGE(int v1,int v2, int weight)
+{
+    Edge *v = (Edge *)malloc(sizeof(struct edge));
+
+    v->v1 = v1;
+    v->v2 = v2;
+    v->weight = weight;
+
+    return v;
+}
+
 /*void GRAPHprint(Grafo *G, char *ficheiro)
 {
   int i, j;
@@ -297,33 +319,49 @@ LinkedList *insertSortedLinkedList(LinkedList *first, Item item, int (*compareIt
         fprintf(f, "%d %d %d\n", i, j, G -> adjmatrix[i][j]);
     }
   fclose(f);
-}
+}*/
 
-void GRAPHfill(Grafo *G, char *ficheiro)
+GRAPHfill(Grafo *G, char *ficheiro)
 {
   FILE *f;
-  int V = 0;
-  int c = 0;
+  int V = 0, vertice1, vertice2;
+  int E = 0, custo;
   int i, j;
+  Grafo *G=NULL;
+  Edge *E=NULL;
 
   f = fopen(ficheiro, "r");
 
+  if(fscanf(ficheiro, "%d %d", &V, &E)!=2)
+    return;
 
+  for (i = 0; i < E; i++)
+  {
+    if(fscanf(ficheiro, "%d %d %d", &vertice1, &vertice2, &custo)!=3)
+            return;
+    E = EDGE(vertice1, vertice2, custo);
+
+    INSERCAOaresta(G, E);
+        /*Free do espaco alocado*/
+    free(E);
+  }
   fclose(f);
 }
 
 void GRAPHinsertE(Grafo *G, Edge *E)
 {
-  int i = E -> v1;
-  int j = E -> v2;
-  int w = E -> weight;
+    int aux = E->v1, aux1 = E->v2;
 
+    G->adj[aux] = INICIALIZAR(aux1, G->adj[aux], E->weight);
+    G->adj[aux1] = INICIALIZAR(aux, G->adj[aux1], E->weight);
 
+    G->valency[aux]++;
+    G->valency[aux1]++;
 
-  free(E);
+    G->E++;  
 }
 
-void GRAPHprint(Grafo *G, char *ficheiro)
+/*void GRAPHprint(Grafo *G, char *ficheiro)
 {
   int i, j;
   FILE *f;
@@ -338,15 +376,15 @@ void GRAPHprint(Grafo *G, char *ficheiro)
         fprintf(f, "%d %d %d\n", i, j, G -> adjmatrix[i][j]);
     }
   fclose(f);
-}
+}*/
 
 void GRAPHdestroy(Grafo *G)
 {
   int i;
 
   for (i = 0; i < G -> V; i++)
-    free(G -> adjmatrix[i]);
-  free(G -> adjmatrix);
+    libertaLista(G->adj[i]);
+  free(G -> adj);
   free(G -> valency);
   free(G);
-}*/
+}
