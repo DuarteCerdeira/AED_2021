@@ -331,7 +331,7 @@ Grafo *INITgrafo(int vertice)
     /*Inicializacao de cada posicao do vetor de vertices*/
     for (i = 0; i < vertice; i++)
     {
-        G->adj[i] = NULL;
+        G->adj[i] = initLinkedList();
         G->valency[i] = 0;
     }
     /*retorno*/
@@ -368,10 +368,14 @@ void GRAPHfill(Grafo **G, char *ficheiro)
 
 void GRAPHinsertE(Grafo *G, Edge *e)
 {
-    int aux = e->v1, aux1 = e->v2;
+    Item aux = e->v1, aux1 = e->v2;
+    int err1, err2;
 
-    G->adj[aux] = INICIALIZAR(aux1, G->adj[aux], e->weight);
-    G->adj[aux1] = INICIALIZAR(aux, G->adj[aux1], e->weight);
+    /*G->adj[aux] = INICIALIZAR(aux1, G->adj[aux], e->weight);
+    G->adj[aux1] = INICIALIZAR(aux, G->adj[aux1], e->weight);*/
+
+    G -> adj[aux] = insertSortedLinkedList(G -> adj[aux], aux1, compareItems, &err1);
+    G -> adj[aux1] = insertSortedLinkedList(G -> adj[aux1], aux, compareItems, &err2);
 
     G->valency[aux]++;
     G->valency[aux1]++;
@@ -407,4 +411,13 @@ void GRAPHdestroy(Grafo *G)
   free(G -> adj);
   free(G -> valency);
   free(G);
+}
+
+int compareItems(Item i1, Item i2)
+{
+  if (i1 < i2)
+    return -1;
+  else if (i1 == i2)
+    return 0;
+  return 1;
 }

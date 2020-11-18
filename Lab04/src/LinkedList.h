@@ -214,5 +214,8 @@ void GRAPHdestroy(Grafo *G);
 void libertaLista(LinkedList *lp);
 Grafo *INITgrafo(int vertice);
 LinkedList *INICIALIZAR(int vertice, LinkedList *proximo, int cost);
+
+int compareItems(int, int);
+
 /* End of: Protect multiple inclusions*/
 #endif
