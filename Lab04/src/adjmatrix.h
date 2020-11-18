@@ -11,9 +11,11 @@ typedef struct graph Graph;
 
 Graph *GRAPHinit(int);
 
-void GRAPHfill(Graph **, char *);
+void GRAPHfill(Graph **, char *, int);
 void GRAPHinsertE(Graph *, Edge *);
 void GRAPHprint(Graph *, char *);
 void GRAPHdestroy(Graph *);
+
+void GraphClique(Graph *grafo, int);
 
 #endif
