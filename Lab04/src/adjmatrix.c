@@ -130,11 +130,14 @@ void GraphClique(Graph *g, int escolha)
     /* Ver se os 2 primeiros vertices estao ligados diretamente */
     for (i = 0; i < g->V; i++)
     {
-      if (primeiro==100 && g->adjmatrix[escolha][i] > 0)
+      if (g->adjmatrix[escolha][i] > 0)
       {
         primeiro=i;
       }
-      if (primeiro!=100 && (i!=primeiro) && (g->adjmatrix[escolha][i] >0))
+    }
+    for (i = 0; i < g->V; i++)
+    {
+      if ((i!=primeiro) && (g->adjmatrix[escolha][i] >0))
       {
         segundo=i;
       }
@@ -143,9 +146,13 @@ void GraphClique(Graph *g, int escolha)
     {
       printf("Tem clique de 3\n");
     }
+    else
+    {
+      printf("Nao tem clique de 3\n");
+    }
   }
   else if (g->valency[escolha] == 1)
-    printf("0");
+    printf("Nao tem clique de 3\n");
   else if (g->valency[escolha] == 0)
     printf("Nao pertence ao grafo");
 }
