@@ -83,7 +83,8 @@ void GRAPHinsertE(Graph *G, Edge *E)
 
 void GRAPHprint(Graph *G, char *ficheiro)
 {
-  int i, j;
+  int i, j,graumaximus=0;
+  double densidade=(double)(G->E)/G->V;
   FILE *f;
 
   f = fopen(ficheiro, "w");
@@ -95,6 +96,13 @@ void GRAPHprint(Graph *G, char *ficheiro)
       if (G -> adjmatrix[i][j] != 0 && i < j)
         fprintf(f, "%d %d %d\n", i, j, G -> adjmatrix[i][j]);
     }
+  
+  for (i = 0; i < G->V; i++)  
+    if(graumaximus<G->valency[i])
+      graumaximus=G->valency[i];
+
+  printf("%.3lf %d\n",densidade,graumaximus);
+
   fclose(f);
 }
 
