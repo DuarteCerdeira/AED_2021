@@ -202,6 +202,7 @@ LinkedList * insertUnsortedLinkedList(LinkedList * next, Item this);
  */
 LinkedList * insertSortedLinkedList(LinkedList * first,
                            Item item,
+                           Item weight,
                            int (* comparisonItemFnt)
                            (Item item1, Item item2),
                            int * err);

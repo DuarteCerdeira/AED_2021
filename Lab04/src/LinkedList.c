@@ -247,7 +247,7 @@ LinkedList *insertUnsortedLinkedList(LinkedList *next, Item this)
  *  Return value:
  *    Returns the pointer to the first node of the sorted linked list.
  */
-LinkedList *insertSortedLinkedList(LinkedList *first, Item item, int (*compareItems)(Item it1, Item it2),int *err)
+LinkedList *insertSortedLinkedList(LinkedList *first, Item item, Item weight, int (*compareItems)(Item it1, Item it2), int *err)
 {
     LinkedList *new, *aux;
 
@@ -257,6 +257,7 @@ LinkedList *insertSortedLinkedList(LinkedList *first, Item item, int (*compareIt
         return NULL;
 
     new->this = item; /* Initialize new node  */
+    new->weight = weight;
     new->next = NULL;
 
     if (first == NULL) /* first item in list */
@@ -293,7 +294,7 @@ LinkedList *insertSortedLinkedList(LinkedList *first, Item item, int (*compareIt
     return NULL;
 }
 
-Edge *EDGE(int v1,int v2, int weight)
+Edge *EDGE(int v1, int v2, int weight)
 {
     Edge *v = (Edge *)malloc(sizeof(struct edge));
 
@@ -303,7 +304,6 @@ Edge *EDGE(int v1,int v2, int weight)
 
     return v;
 }
-
 
 LinkedList *INICIALIZAR(int vertice, LinkedList *proximo, int cost)
 {
@@ -340,30 +340,30 @@ Grafo *INITgrafo(int vertice)
 
 void GRAPHfill(Grafo **G, char *ficheiro)
 {
-  FILE *f;
-  int V = 0, vertice1, vertice2;
-  int c = 0, custo;
-  int i;
-  Edge *e=NULL;
+    FILE *f;
+    int V = 0, vertice1, vertice2;
+    int c = 0, custo;
+    int i;
+    Edge *e = NULL;
 
-  f = fopen(ficheiro, "r");
+    f = fopen(ficheiro, "r");
 
-  if(fscanf(f, "%d %d", &V, &c)!=2)
-    return;
+    if (fscanf(f, "%d %d", &V, &c) != 2)
+        return;
 
-  *G=INITgrafo(V);
+    *G = INITgrafo(V);
 
-  for (i = 0; i < c; i++)
-  {
-    if(fscanf(f, "%d %d %d", &vertice1, &vertice2, &custo)!=3)
+    for (i = 0; i < c; i++)
+    {
+        if (fscanf(f, "%d %d %d", &vertice1, &vertice2, &custo) != 3)
             return;
-    e = EDGE(vertice1, vertice2, custo);
+        e = EDGE(vertice1, vertice2, custo);
 
-    GRAPHinsertE(*G, e);
+        GRAPHinsertE(*G, e);
         /*Free do espaco alocado */
-    free(e);
-  }
-  fclose(f);
+        free(e);
+    }
+    fclose(f);
 }
 
 void GRAPHinsertE(Grafo *G, Edge *e)
@@ -374,8 +374,8 @@ void GRAPHinsertE(Grafo *G, Edge *e)
     /*G->adj[aux] = INICIALIZAR(aux1, G->adj[aux], e->weight);
     G->adj[aux1] = INICIALIZAR(aux, G->adj[aux1], e->weight);*/
 
-    G -> adj[aux] = insertSortedLinkedList(G -> adj[aux], aux1, compareItems, &err1);
-    G -> adj[aux1] = insertSortedLinkedList(G -> adj[aux1], aux, compareItems, &err2);
+    G->adj[aux] = insertSortedLinkedList(G->adj[aux], aux1, e->weight, compareItems, &err1);
+    G->adj[aux1] = insertSortedLinkedList(G->adj[aux1], aux, e->weight, compareItems, &err2);
 
     G->valency[aux]++;
     G->valency[aux1]++;
@@ -385,39 +385,40 @@ void GRAPHinsertE(Grafo *G, Edge *e)
 
 void GRAPHprint(Grafo *G, char *ficheiro)
 {
-  int i;
-  LinkedList *h;
-  FILE *f;
+    int i;
+    LinkedList *h;
+    FILE *f;
 
-  f = fopen(ficheiro, "w+");
+    f = fopen(ficheiro, "w+");
 
-  fprintf(f, "%d\n", G->V);
+    fprintf(f, "%d\n", G->V);
 
-  for (i = 0; i < G -> V; i++) {
-    for(h = G -> adj[i]; h != NULL; h = getNextNodeLinkedList(h))
-      fprintf(f, "%d:%d ", getItemLinkedList(h), h -> weight);
-    fprintf(f, "-1\n");
-  }
+    for (i = 0; i < G->V; i++)
+    {
+        for (h = G->adj[i]; h != NULL; h = getNextNodeLinkedList(h))
+            fprintf(f, "%d:%d ", h->this, h->weight);
+        fprintf(f, "-1\n");
+    }
 
-  fclose(f);
+    fclose(f);
 }
 
 void GRAPHdestroy(Grafo *G)
 {
-  int i;
+    int i;
 
-  for (i = 0; i < G -> V; i++)
-    libertaLista(G->adj[i]);
-  free(G -> adj);
-  free(G -> valency);
-  free(G);
+    for (i = 0; i < G->V; i++)
+        libertaLista(G->adj[i]);
+    free(G->adj);
+    free(G->valency);
+    free(G);
 }
 
 int compareItems(Item i1, Item i2)
 {
-  if (i1 < i2)
-    return -1;
-  else if (i1 == i2)
-    return 0;
-  return 1;
+    if (i1 < i2)
+        return -1;
+    else if (i1 == i2)
+        return 0;
+    return 1;
 }
