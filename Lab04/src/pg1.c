@@ -10,7 +10,7 @@ int main(int argc, char **argv)
   char *ficheiroName;
   char *ficheiroOut;
   int sizeFicheiro;
-  int escolha;
+  int escolha=0;
 
   Graph *grafo = NULL;
 
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     exit(0);
   }
 
-  GRAPHfill(&grafo, ficheiroIn, &escolha);
+  GRAPHfill(&grafo, ficheiroIn);
 
   sizeFicheiro = strlen(ficheiroIn) - strlen(".adj");
 
@@ -41,6 +41,7 @@ int main(int argc, char **argv)
 
   GRAPHprint(grafo, ficheiroOut);
 
+  scanf("%d",&escolha);
   GraphClique(grafo, escolha);
 
   free(ficheiroIn);

@@ -11,7 +11,7 @@ typedef struct graph Graph;
 
 Graph *GRAPHinit(int);
 
-void GRAPHfill(Graph **, char *, int);
+void GRAPHfill(Graph **, char *);
 void GRAPHinsertE(Graph *, Edge *);
 void GRAPHprint(Graph *, char *);
 void GRAPHdestroy(Graph *);

@@ -46,7 +46,7 @@ Graph *GRAPHinit(int V)
   return G;
 }
 
-void GRAPHfill(Graph **G, char *ficheiro, int escolha)
+void GRAPHfill(Graph **G, char *ficheiro)
 {
   FILE *f;
   int V = 0;
@@ -55,7 +55,7 @@ void GRAPHfill(Graph **G, char *ficheiro, int escolha)
 
   f = fopen(ficheiro, "r");
 
-  fscanf(f, "%d %d", &V, &escolha);
+  fscanf(f, "%d", &V);
 
   *G = GRAPHinit(V);
 
@@ -121,15 +121,27 @@ void GRAPHdestroy(Graph *G)
   free(G);
 }
 
-void GraphClique(Graph *g,int escolha)
+void GraphClique(Graph *g, int escolha)
 {
-  int i, j;
+  int i;
+  int primeiro=100, segundo=100;
   if (g->valency[escolha] > 1)
   {
     /* Ver se os 2 primeiros vertices estao ligados diretamente */
     for (i = 0; i < g->V; i++)
     {
-      
+      if (primeiro==100 && g->adjmatrix[escolha][i] > 0)
+      {
+        primeiro=i;
+      }
+      if (primeiro!=100 && (i!=primeiro) && (g->adjmatrix[escolha][i] >0))
+      {
+        segundo=i;
+      }
+    }
+    if (g->adjmatrix[primeiro][segundo]>0)
+    {
+      printf("Tem clique de 3\n");
     }
   }
   else if (g->valency[escolha] == 1)
