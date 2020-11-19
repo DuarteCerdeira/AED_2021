@@ -27,16 +27,17 @@
 #define DEMO
 
 /* A heap is represented by a structure: */
-struct _heap {
-  int (*less) (Item, Item);     /* Surprise! this field is a function pointer
+struct _heap
+{
+  int (*less)(Item, Item); /* Surprise! this field is a function pointer
                                  * to elements in the heap. */
-  void (*print) (Item);         /* So is this one!! */
-  int n_elements;               /* # elements in heap */
-  int size;                     /* max size of the heap. */
-  Item *heapdata;               /* An array of Items. */
+  void (*print)(Item);     /* So is this one!! */
+  int n_elements;          /* # elements in heap */
+  int size;                /* max size of the heap. */
+  Item *heapdata;          /* An array of Items. */
 };
 
-void (*PrintItem) (Item);
+void (*PrintItem)(Item);
 
 /******************************************************************************
  * PrintHeap()
@@ -49,37 +50,38 @@ void (*PrintItem) (Item);
  *
  *****************************************************************************/
 
-int PrintHeap(Heap * h)
+int PrintHeap(Heap *h)
 {
-    int i;
+  int i;
 
-    if (h->n_elements == 0) {
-        printf("Heap empty.\n");
-        return 0;
-    }
-    printf("\n");
-    for (i = 0; i < h->n_elements; i++)
-        printf("+----------");
-    printf("+\n");
-    for (i = 0; i < h->n_elements; i++)
-        printf("|   %3d    ", i);
-    printf("|\n");
-    for (i = 0; i < h->n_elements; i++)
-        printf("+----------");
-    printf("+\n");
-    for (i = 0; i < h->n_elements; i++) {
-        printf("| ");
-        h->print(h->heapdata[i]);
-        printf(" ");
-    }
-    printf("|\n");
-    for (i = 0; i < h->n_elements; i++)
-        printf("+----------");
-    printf("+\n");
+  if (h->n_elements == 0)
+  {
+    printf("Heap empty.\n");
+    return 0;
+  }
+  printf("\n");
+  for (i = 0; i < h->n_elements; i++)
+    printf("+----------");
+  printf("+\n");
+  for (i = 0; i < h->n_elements; i++)
+    printf("|   %3d    ", i);
+  printf("|\n");
+  for (i = 0; i < h->n_elements; i++)
+    printf("+----------");
+  printf("+\n");
+  for (i = 0; i < h->n_elements; i++)
+  {
+    printf("| ");
+    h->print(h->heapdata[i]);
+    printf(" ");
+  }
+  printf("|\n");
+  for (i = 0; i < h->n_elements; i++)
+    printf("+----------");
+  printf("+\n");
 
-    return h->n_elements;
+  return h->n_elements;
 }
-
 
 /******************************************************************************
  * FixUp()
@@ -93,15 +95,16 @@ int PrintHeap(Heap * h)
  *
  *****************************************************************************/
 
-void FixUp(Heap * h, int k)
+void FixUp(Heap *h, int k)
 {
   Item t;
-  while ((k > 0) && (h->less) ((h->heapdata)[(k - 1) / 2], (h->heapdata)[k])) {
+  while ((k > 0) && (h->less)((h->heapdata)[(k - 1) / 2], (h->heapdata)[k]))
+  {
 #ifdef DEMO
     /* --------------------------------------------------- */
     printf("FixUp: heap[%d]: %d is smaller than offspring heap[%d]: %d\n",
-           (k - 1) / 2, *((int *) (h->heapdata)[(k - 1) / 2]),
-           k, *((int *) (h->heapdata)[k]));
+           (k - 1) / 2, *((int *)(h->heapdata)[(k - 1) / 2]),
+           k, *((int *)(h->heapdata)[k]));
     printf("\t=> exchange\n");
 #endif
     /*---------------------------------------------------------*/
@@ -121,7 +124,6 @@ void FixUp(Heap * h, int k)
   return;
 }
 
-
 /******************************************************************************
  * FixDown()
  *
@@ -134,26 +136,28 @@ void FixUp(Heap * h, int k)
  *
  *****************************************************************************/
 
-void FixDown(Heap * h, int k)
+void FixDown(Heap *h, int k)
 {
   int j;
   Item t;
 
-  while ((2 * k + 1) < h->n_elements) {
+  while ((2 * k + 1) < h->n_elements)
+  {
     j = 2 * k + 1;
     if (((j + 1) < h->n_elements) &&
-        (h->less) (h->heapdata[j], h->heapdata[j + 1])) {
+        (h->less)(h->heapdata[j], h->heapdata[j + 1]))
+    {
       /* second offspring is greater */
       j++;
     }
-    if (!(h->less) (h->heapdata[k], h->heapdata[j])) {
+    if (!(h->less)(h->heapdata[k], h->heapdata[j]))
+    {
       /* Elements are in correct order. */
 
 #ifdef DEMO
       /* --------------------------------------------------- */
-      printf
-          ("FixDown: Compare heap[%d]: %d with heap[%d]: %d => don't exchange\n",
-           k, *((int *) h->heapdata[k]), j, *((int *) h->heapdata[j]));
+      printf("FixDown: Compare heap[%d]: %d with heap[%d]: %d => don't exchange\n",
+             k, *((int *)h->heapdata[k]), j, *((int *)h->heapdata[j]));
 #endif
       /*---------------------------------------------------------*/
       break;
@@ -161,7 +165,7 @@ void FixDown(Heap * h, int k)
 #ifdef DEMO
     /* --------------------------------------------------- */
     printf("FixDown: heap[%d]: %d is smaller than offspring heap[%d]: %d\n",
-           k, *((int *) (h->heapdata)[k]), j, *((int *) (h->heapdata)[j]));
+           k, *((int *)(h->heapdata)[k]), j, *((int *)(h->heapdata)[j]));
     printf("\t=> exchange\n");
 #endif
     /*---------------------------------------------------------*/
@@ -183,7 +187,6 @@ void FixDown(Heap * h, int k)
   return;
 }
 
-
 /******************************************************************************
  * NewHeap()
  *
@@ -196,12 +199,13 @@ void FixDown(Heap * h, int k)
  *
  *****************************************************************************/
 
-Heap *NewHeap(int size, int (*less) (Item, Item), void (*print) (Item))
+Heap *NewHeap(int size, int (*less)(Item, Item), void (*print)(Item))
 {
   Heap *h;
 
-  h = (Heap *) malloc(sizeof(Heap));
-  if (h == ((Heap *) NULL)) {
+  h = (Heap *)malloc(sizeof(Heap));
+  if (h == ((Heap *)NULL))
+  {
     fprintf(stderr, "Error in malloc of heap\n");
     exit(1);
   }
@@ -210,8 +214,9 @@ Heap *NewHeap(int size, int (*less) (Item, Item), void (*print) (Item))
   h->less = less;
   h->print = print;
   h->size = size;
-  h->heapdata = (Item *) malloc(size * sizeof(Item));
-  if (h->heapdata == ((Item *) NULL)) {
+  h->heapdata = (Item *)malloc(size * sizeof(Item));
+  if (h->heapdata == ((Item *)NULL))
+  {
     fprintf(stderr, "Error in malloc of heap data\n");
     exit(1);
   }
@@ -236,8 +241,6 @@ void FreeHeap(Heap *h)
   /****************************************************
    * Insert code here
    ****************************************************/
-
-
 }
 
 /******************************************************************************
@@ -252,9 +255,10 @@ void FreeHeap(Heap *h)
  *
  *****************************************************************************/
 
-int Insert(Heap * h, Item element)
+int Insert(Heap *h, Item element)
 {
-  if (h->n_elements == h->size) {
+  if (h->n_elements == h->size)
+  {
     printf("Heap full (size = %d) !\n", h->size);
     return 0;
   }
@@ -278,16 +282,16 @@ int Insert(Heap * h, Item element)
  *
  *****************************************************************************/
 
-int Direct_Insert(Heap * h, Item element)
+int Direct_Insert(Heap *h, Item element)
 {
-  if (h->n_elements == h->size) {
+  if (h->n_elements == h->size)
+  {
     printf("Heap full (size = %d) !\n", h->size);
     return 0;
   }
   h->heapdata[h->n_elements] = element;
 
   h->n_elements++;
-
 
   return 1;
 }
@@ -306,20 +310,23 @@ int Direct_Insert(Heap * h, Item element)
  *
  *****************************************************************************/
 
-void Modify(Heap * h, int index, Item newvalue)
+void Modify(Heap *h, int index, Item newvalue)
 {
-  if (index > h->n_elements - 1) {
+  if (index > h->n_elements - 1)
+  {
     printf("Index out of range (index = %d) !\n", index);
     return;
   }
   /* Compares new value  with the value of the element to substitute */
-  if ((h->less) (newvalue, h->heapdata[index])) {
+  if ((h->less)(newvalue, h->heapdata[index]))
+  {
     /* If smaller, reconstruct heap with function FixDown */
     free(h->heapdata[index]);
     h->heapdata[index] = newvalue;
     FixDown(h, index);
   }
-  else {
+  else
+  {
     /* If greater, reconstruct heap using the function FixUp */
     free(h->heapdata[index]);
     h->heapdata[index] = newvalue;
@@ -328,7 +335,6 @@ void Modify(Heap * h, int index, Item newvalue)
 
   return;
 }
-
 
 /******************************************************************************
  * RemoveMax()
@@ -343,11 +349,12 @@ void Modify(Heap * h, int index, Item newvalue)
  *
  *****************************************************************************/
 
-Item RemoveMax(Heap * h)
+Item RemoveMax(Heap *h)
 {
   Item t;
 
-  if (h->n_elements > 0) {
+  if (h->n_elements > 0)
+  {
     t = (h->heapdata)[0];
     (h->heapdata)[0] = (h->heapdata)[h->n_elements - 1];
     (h->heapdata)[h->n_elements - 1] = t;
@@ -372,11 +379,12 @@ Item RemoveMax(Heap * h)
  *
  *****************************************************************************/
 
-Item GetIndex(Heap * h, int index)
+Item GetIndex(Heap *h, int index)
 {
   Item t;
 
-  if (index > h->n_elements - 1) {
+  if (index > h->n_elements - 1)
+  {
     printf("Index out of range (index = %d) !\n", index);
     return NULL;
   }
@@ -396,14 +404,14 @@ Item GetIndex(Heap * h, int index)
  *
  *****************************************************************************/
 
-void CleanHeap(Heap * h)
+void CleanHeap(Heap *h)
 {
 
-    /****************************************************
+  /****************************************************
      * Insert CleanHeap code here
      ****************************************************/
 
-    return;
+  return;
 }
 
 /******************************************************************************
@@ -417,10 +425,10 @@ void CleanHeap(Heap * h)
  *
  *****************************************************************************/
 
-int VerifyHeap(Heap * h)
+int VerifyHeap(Heap *h)
 {
   int status = 0;
-    /****************************************************
+  /****************************************************
      * Insert VerifyHeap code here
      ****************************************************/
 
@@ -438,13 +446,12 @@ int VerifyHeap(Heap * h)
  *
  *****************************************************************************/
 
-void HeapSort(Heap * h)
+void HeapSort(Heap *h)
 {
 
   /****************************************************
    * Insert Sort code here
    ****************************************************/
-
 
   return;
 }
@@ -460,13 +467,12 @@ void HeapSort(Heap * h)
  *
  *****************************************************************************/
 
-void Heapify(Heap * h)
+void Heapify(Heap *h)
 {
 
   /****************************************************
    * Insert Heapify code here
    ****************************************************/
 
-
-    return;
+  return;
 }

@@ -17,19 +17,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 #include "heap.h"
 
-typedef struct _proc_data {
+typedef struct _proc_data
+{
   int pid;
   int prio;
 } ProcData;
 int currPID = 0;
 
-
 /* This is just an example; change as required for your application */
 int Heapsize = 16;
-
 
 /******************************************************************************
  * PrintNumero()
@@ -45,13 +43,12 @@ int Heapsize = 16;
 
 void PrintNum(Item hi)
 {
-  ProcData *proc = (ProcData*)hi;
+  ProcData *proc = (ProcData *)hi;
 
   printf("[7m%3d[0m/[1m%3d[0m ", proc->pid, proc->prio);
 
   return;
 }
-
 
 /******************************************************************************
  * PrintProcData()
@@ -77,7 +74,6 @@ int PrintProcData(Heap *h)
   return (status);
 }
 
-
 /******************************************************************************
  * LessNumero()
  *
@@ -92,8 +88,8 @@ int PrintProcData(Heap *h)
 
 int LessNum(Item a, Item b)
 {
-  ProcData *proca = (ProcData*) a;
-  ProcData *procb = (ProcData*) b;
+  ProcData *proca = (ProcData *)a;
+  ProcData *procb = (ProcData *)b;
   int aa, bb;
 
   aa = proca->prio;
@@ -101,7 +97,6 @@ int LessNum(Item a, Item b)
 
   return (aa < bb);
 }
-
 
 /******************************************************************************
  * InsertNum()
@@ -114,21 +109,23 @@ int LessNum(Item a, Item b)
  *
  *****************************************************************************/
 
-void InsertNum(Heap * h)
+void InsertNum(Heap *h)
 {
   ProcData *proc;
   int num, status;
 
   printf("Number: ");
   status = scanf("%d", &num);
-  if (status == 1) {
-    proc = (ProcData *) malloc(sizeof(ProcData));
+  if (status == 1)
+  {
+    proc = (ProcData *)malloc(sizeof(ProcData));
     proc->pid = currPID;
     proc->prio = num;
     currPID++;
-    if (Insert(h, (Item) proc) == 0) free(proc);
+    if (Insert(h, (Item)proc) == 0)
+      free(proc);
     printf("\nFinal Heap\n");
-    (void) PrintProcData(h);
+    (void)PrintProcData(h);
   }
 
   return;
@@ -145,21 +142,23 @@ void InsertNum(Heap * h)
  *
  *****************************************************************************/
 
-void DirectInsertNum(Heap * h)
+void DirectInsertNum(Heap *h)
 {
   ProcData *proc;
   int num, status;
 
   printf("Number: ");
   status = scanf("%d", &num);
-  if (status == 1) {
-    proc = (ProcData *) malloc(sizeof(ProcData));
+  if (status == 1)
+  {
+    proc = (ProcData *)malloc(sizeof(ProcData));
     proc->pid = currPID;
     proc->prio = num;
     currPID++;
-    if (Direct_Insert(h, (Item) proc) == 0) free(proc);
+    if (Direct_Insert(h, (Item)proc) == 0)
+      free(proc);
     printf("\nFinal Heap\n");
-    (void) PrintProcData(h);
+    (void)PrintProcData(h);
   }
 
   return;
@@ -176,27 +175,27 @@ void DirectInsertNum(Heap * h)
  *
  *****************************************************************************/
 
-void ModifyNum(Heap * h)
+void ModifyNum(Heap *h)
 {
   int index;
   int novovalor;
-  ProcData *newproc = (ProcData*) malloc(sizeof(ProcData)), *oldproc;
+  ProcData *newproc = (ProcData *)malloc(sizeof(ProcData)), *oldproc;
 
   printf("Index of the element to change: ");
   scanf("%d", &index);
   printf("New priority: ");
   scanf("%d", &novovalor);
-  oldproc = (ProcData*) GetIndex(h, index);
-  if (oldproc != (ProcData*)NULL) {
+  oldproc = (ProcData *)GetIndex(h, index);
+  if (oldproc != (ProcData *)NULL)
+  {
     newproc->pid = oldproc->pid;
     newproc->prio = novovalor;
-    Modify(h, index, (Item) newproc);
+    Modify(h, index, (Item)newproc);
   }
-  (void) PrintProcData(h);
+  (void)PrintProcData(h);
 
   return;
 }
-
 
 /******************************************************************************
  * RemoveMaxNum()
@@ -209,10 +208,10 @@ void ModifyNum(Heap * h)
  *
  *****************************************************************************/
 
-void RemoveMaxNum(Heap * h)
+void RemoveMaxNum(Heap *h)
 {
-  (void) RemoveMax(h);
-  (void) PrintProcData(h);
+  (void)RemoveMax(h);
+  (void)PrintProcData(h);
 
   return;
 }
@@ -228,10 +227,10 @@ void RemoveMaxNum(Heap * h)
  *
  *****************************************************************************/
 
-void HeapSortOption(Heap * h)
+void HeapSortOption(Heap *h)
 {
   HeapSort(h);
-  (void) PrintProcData(h);
+  (void)PrintProcData(h);
 
   return;
 }
@@ -247,13 +246,14 @@ void HeapSortOption(Heap * h)
  *
  *****************************************************************************/
 
-void VerifyHeapOption(Heap * h)
+void VerifyHeapOption(Heap *h)
 {
-  if (PrintProcData(h) != 0) {
-     if (VerifyHeap(h))
-        printf("*************** It is an heap\n");
-     else
-        printf("*************** It is not an heap\n");
+  if (PrintProcData(h) != 0)
+  {
+    if (VerifyHeap(h))
+      printf("*************** It is an heap\n");
+    else
+      printf("*************** It is not an heap\n");
   }
   return;
 }
@@ -269,10 +269,10 @@ void VerifyHeapOption(Heap * h)
  *
  *****************************************************************************/
 
-void HeapifyOption(Heap * h)
+void HeapifyOption(Heap *h)
 {
   Heapify(h);
-  (void) PrintProcData(h);
+  (void)PrintProcData(h);
 
   return;
 }
@@ -288,22 +288,24 @@ void HeapifyOption(Heap * h)
  *
  *****************************************************************************/
 
-void Example(Heap * h)
+void Example(Heap *h)
 {
   ProcData *proc;
   int i, n = Heapsize;
 
-  for (i = 0; i < n; i++) {
-    proc = (ProcData *) malloc(sizeof(ProcData));
+  for (i = 0; i < n; i++)
+  {
+    proc = (ProcData *)malloc(sizeof(ProcData));
     proc->pid = currPID;
     proc->prio = i;
     currPID++;
-    if (Insert(h, (Item) proc)==0) free(proc);
+    if (Insert(h, (Item)proc) == 0)
+      free(proc);
   }
   printf("\nFinal Heap\n");
-  (void) PrintProcData(h);
+  (void)PrintProcData(h);
 
-  return;                       /*h */
+  return; /*h */
 }
 
 /******************************************************************************
@@ -361,7 +363,6 @@ void PrintOptions()
   return;
 }
 
-
 /******************************************************************************
  * main()
  *
@@ -383,11 +384,13 @@ int main(int argc, char **argv)
   /* Heapsize instantiated and initialized at the top of this file */
   h = NewHeap(Heapsize, LessNum, PrintNum);
 
-  while (!feof(stdin)) {
+  while (!feof(stdin))
+  {
     PrintOptions();
     printf("Heap> ");
     scanf("%s", command);
-    switch (command[0]) {
+    switch (command[0])
+    {
     case 'i':
       InsertNum(h);
       break;
@@ -404,7 +407,7 @@ int main(int argc, char **argv)
       Example(h);
       break;
     case 'p':
-      (void) PrintProcData(h);
+      (void)PrintProcData(h);
       break;
     case 'd':
       DirectInsertNum(h);
@@ -412,10 +415,10 @@ int main(int argc, char **argv)
     case 'v':
       VerifyHeapOption(h);
       break;
-    case('f'):
+    case ('f'):
       HeapifyOption(h);
       break;
-    case('c'):
+    case ('c'):
       CleanHeap(h);
       break;
     case 'h':
@@ -429,9 +432,6 @@ int main(int argc, char **argv)
              command);
     }
   }
-
-
-
 
   return 0;
 }
