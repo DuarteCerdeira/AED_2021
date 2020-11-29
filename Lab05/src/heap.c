@@ -25,6 +25,7 @@
 
 /* to remove comments, just delete or comment the next line */
 /*#define DEMO*/
+#define exch(x, y) {Item t = x; x = y; y = t; }
 
 /* A heap is represented by a structure: */
 struct _heap
@@ -36,6 +37,8 @@ struct _heap
   int size;                /* max size of the heap. */
   Item *heapdata;          /* An array of Items. */
 };
+
+/* Ex9: tabela indexada por ID's que guardasse posição no acervo */
 
 void (*PrintItem)(Item);
 
@@ -250,8 +253,8 @@ void FreeHeap(Heap *h)
     }
   }
   free(h->heapdata);
-  
-  free(h); 
+
+  free(h);
 }
 
 /******************************************************************************
@@ -418,7 +421,7 @@ Item GetIndex(Heap *h, int index)
 void CleanHeap(Heap *h)
 {
   int i, limit=h->n_elements;
- 
+
   /****************************************************
      * Insert CleanHeap code here
      ****************************************************/
@@ -426,7 +429,7 @@ void CleanHeap(Heap *h)
   {
     RemoveMax(h);
   }
-   
+
   return;
 }
 
@@ -469,22 +472,17 @@ int VerifyHeap(Heap *h)
 void HeapSort(Heap *h)
 {
   int n_temp = h -> n_elements;
-  Item trade;
 
-  if (VerifyHeap) {
+  if (VerifyHeap(h)) {
     while (--(h -> n_elements) >= 0) {
-      trade=h -> heapdata[0];
-      h -> heapdata[0]=h -> heapdata[h -> n_elements];
-      h -> heapdata[h -> n_elements]=trade;
+      exch(h -> heapdata[0], h -> heapdata[h -> n_elements]);
       FixDown(h, 0);
     }
   }
   else {
     Heapify(h);
     while (--(h -> n_elements) >= 0) {
-      trade=h -> heapdata[0];
-      h -> heapdata[0]=h -> heapdata[h -> n_elements];
-      h -> heapdata[h -> n_elements]=trade;
+      exch(h -> heapdata[0], h -> heapdata[h -> n_elements])
       FixDown(h, 0);
     }
   }
