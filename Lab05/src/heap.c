@@ -444,9 +444,13 @@ void CleanHeap(Heap *h)
 int VerifyHeap(Heap *h)
 {
   int status = 0;
-  /****************************************************
-     * Insert VerifyHeap code here
-     ****************************************************/
+  int i;
+
+  for (i = h -> n_elements - 1; i > 0; i--) {
+    if (! (h -> less(h -> heapdata[i], h -> heapdata[(i - 1) / 2])))
+      return status;
+  }
+  status = 1;
 
   return status;
 }
@@ -464,10 +468,22 @@ int VerifyHeap(Heap *h)
 
 void HeapSort(Heap *h)
 {
+  int n_temp = h -> n_elements;
 
-  /****************************************************
-   * Insert Sort code here
-   ****************************************************/
+  if (VerifyHeap) {
+    while (--(h -> n_elements) >= 0) {
+      exch(h -> heapdata[0], h -> heapdata[h -> n_elements]);
+      FixDown(h, 0);
+    }
+  }
+  else {
+    Heapify(h);
+    while (--(h -> n_elements) >= 0) {
+      exch(h -> heapdata[0], h -> heapdata[h -> n_elements]);
+      FixDown(h, 0);
+    }
+  }
+  h -> n_elements = n_temp;
 
   return;
 }
