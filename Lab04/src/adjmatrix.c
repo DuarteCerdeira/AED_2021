@@ -145,6 +145,7 @@ void GraphClique(Graph *g, int escolha)
     if (g->adjmatrix[primeiro][segundo]>0)
     {
       printf("Tem clique de 3\n");
+      
     }
     else
     {

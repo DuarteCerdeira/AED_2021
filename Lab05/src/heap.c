@@ -24,7 +24,7 @@
 #include "heap.h"
 
 /* to remove comments, just delete or comment the next line */
-#define DEMO
+/*#define DEMO*/
 
 /* A heap is represented by a structure: */
 struct _heap
@@ -238,9 +238,20 @@ Heap *NewHeap(int size, int (*less)(Item, Item), void (*print)(Item))
 
 void FreeHeap(Heap *h)
 {
+  int i;
   /****************************************************
    * Insert code here
    ****************************************************/
+  if(h->n_elements!=0)
+  {
+    for (i = 0; i < h->size; i++)
+    {
+      free(h->heapdata[i]);
+    }
+  }
+  free(h->heapdata);
+  
+  free(h); 
 }
 
 /******************************************************************************
@@ -406,11 +417,16 @@ Item GetIndex(Heap *h, int index)
 
 void CleanHeap(Heap *h)
 {
-
+  int i, limit=h->n_elements;
+ 
   /****************************************************
      * Insert CleanHeap code here
      ****************************************************/
-
+  for (i = 0; i < limit; i++)
+  {
+    RemoveMax(h);
+  }
+   
   return;
 }
 
@@ -469,10 +485,22 @@ void HeapSort(Heap *h)
 
 void Heapify(Heap *h)
 {
-
-  /****************************************************
-   * Insert Heapify code here
-   ****************************************************/
+  int L=0, R=(h->n_elements)-1;
+  int Aux, Top = R;
+  Item trade;
+/* Constroi acervo na própria tabela, executando FixDown na parte inferior */
+  for(Aux = (L+R-1)/2; Aux >= L; Aux--)
+    FixDown(h, Aux);
+  /* Reordena a tabela, trocando o topo e exercendo FixDown na tabela com */
+/* dimensão –1 (na troca, o menor é já colocado na posição final) */
+  while(Top > L)
+  {
+    trade=h->heapdata[L];
+    h->heapdata[L]= h->heapdata[Top];
+    h->heapdata[Top]=trade;
+    --Top;
+    FixDown(h, L); 
+  }
 
   return;
 }
