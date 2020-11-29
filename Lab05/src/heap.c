@@ -469,17 +469,22 @@ int VerifyHeap(Heap *h)
 void HeapSort(Heap *h)
 {
   int n_temp = h -> n_elements;
+  Item trade;
 
   if (VerifyHeap) {
     while (--(h -> n_elements) >= 0) {
-      exch(h -> heapdata[0], h -> heapdata[h -> n_elements]);
+      trade=h -> heapdata[0];
+      h -> heapdata[0]=h -> heapdata[h -> n_elements];
+      h -> heapdata[h -> n_elements]=trade;
       FixDown(h, 0);
     }
   }
   else {
     Heapify(h);
     while (--(h -> n_elements) >= 0) {
-      exch(h -> heapdata[0], h -> heapdata[h -> n_elements]);
+      trade=h -> heapdata[0];
+      h -> heapdata[0]=h -> heapdata[h -> n_elements];
+      h -> heapdata[h -> n_elements]=trade;
       FixDown(h, 0);
     }
   }
@@ -501,22 +506,10 @@ void HeapSort(Heap *h)
 
 void Heapify(Heap *h)
 {
-  int L=0, R=(h->n_elements)-1;
-  int Aux, Top = R;
-  Item trade;
-/* Constroi acervo na própria tabela, executando FixDown na parte inferior */
-  for(Aux = (L+R-1)/2; Aux >= L; Aux--)
-    FixDown(h, Aux);
-  /* Reordena a tabela, trocando o topo e exercendo FixDown na tabela com */
-/* dimensão –1 (na troca, o menor é já colocado na posição final) */
-  while(Top > L)
-  {
-    trade=h->heapdata[L];
-    h->heapdata[L]= h->heapdata[Top];
-    h->heapdata[Top]=trade;
-    --Top;
-    FixDown(h, L); 
-  }
+  int i;
+
+  for(i=(h->n_elements-1)/2;i>=0;i--)
+    FixDown(h,i);
 
   return;
 }
