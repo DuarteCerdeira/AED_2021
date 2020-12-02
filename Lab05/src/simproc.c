@@ -358,8 +358,26 @@ void PrintOptions()
   printf("verify:        v   ||   print:         p\n");
   printf("heapify:       f   ||   sort:          s\n");
   printf("example:       e   ||   clean:         c\n");
-  printf("help:          h   ||   quit:          q\n\n");
+  printf("help:          h   ||   quit:          q\n");
+  printf("prio remove:   x\n\n");
 
+  return;
+}
+
+
+  void PriorityRemove(Heap *h)
+{
+  int prio;
+  ProcData *prio_limit = (ProcData *)malloc(sizeof(ProcData));
+
+  printf("Threshold priority: ");
+  scanf("%d", &prio);
+  prio_limit->pid = -1;
+  prio_limit->prio = prio;
+  SortedPrioRemove(h, (Item)prio_limit);
+  (void)PrintProcData(h);
+
+  free(prio_limit);
   return;
 }
 
@@ -427,6 +445,9 @@ int main(int argc, char **argv)
     case 'q':
       FreeHeap(h);
       return 0;
+    case 'x':
+      PriorityRemove(h);
+      break;
     default:
       printf("\nInvalid option \"%s\"; please insert a valid option\n\n",
              command);

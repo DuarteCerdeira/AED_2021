@@ -25,7 +25,6 @@
 
 /* to remove comments, just delete or comment the next line */
 /*#define DEMO*/
-#define exch(x, y) {Item t = x; x = y; y = t; }
 
 /* A heap is represented by a structure: */
 struct _heap
@@ -37,8 +36,6 @@ struct _heap
   int size;                /* max size of the heap. */
   Item *heapdata;          /* An array of Items. */
 };
-
-/* Ex9: tabela indexada por ID's que guardasse posição no acervo */
 
 void (*PrintItem)(Item);
 
@@ -241,20 +238,13 @@ Heap *NewHeap(int size, int (*less)(Item, Item), void (*print)(Item))
 
 void FreeHeap(Heap *h)
 {
-  int i;
   /****************************************************
-   * Insert code here
-   ****************************************************/
-  if(h->n_elements!=0)
-  {
-    for (i = 0; i < h->size; i++)
-    {
-      free(h->heapdata[i]);
-    }
-  }
+  * Insert code here
+  ****************************************************/
+  CleanHeap(h);
   free(h->heapdata);
-
   free(h);
+  return;
 }
 
 /******************************************************************************
@@ -262,7 +252,7 @@ void FreeHeap(Heap *h)
  *
  * Arguments: h - pointer to heap
  *            element - pointer to new element
- * Returns: vopid
+ * Returns: void
  * Side-Effects: none
  *
  * Description: add element at the end of heap and do fixup
@@ -289,7 +279,7 @@ int Insert(Heap *h, Item element)
  *
  * Arguments: h - pointer to heap
  *            element - pointer to new element
- * Returns: vopid
+ * Returns: void
  * Side-Effects: none
  *
  * Description: add element at the end of heap but does not perform fixup
@@ -420,15 +410,16 @@ Item GetIndex(Heap *h, int index)
 
 void CleanHeap(Heap *h)
 {
-  int i, limit=h->n_elements;
 
   /****************************************************
-     * Insert CleanHeap code here
-     ****************************************************/
-  for (i = 0; i < limit; i++)
+  * Insert CleanHeap code here
+  ****************************************************/
+  int i = 0;
+  for (i = 0; i < h->n_elements; i++)
   {
-    RemoveMax(h);
+    free(h->heapdata[i]);
   }
+  h->n_elements = 0;
 
   return;
 }
@@ -437,7 +428,7 @@ void CleanHeap(Heap *h)
  * VerifyHeap()
  *
  * Arguments: Heap
- * Returns: int (1 if it is an heap; 0 otherwise)
+ * Returns: int (1 if it is a heap; 0 otherwise)
  * Side-Effects: None
  *
  * Description: verifies if the argument satisfies the heap condition
@@ -446,16 +437,18 @@ void CleanHeap(Heap *h)
 
 int VerifyHeap(Heap *h)
 {
-  int status = 0;
-  int i;
+  int status = 0, index;
+  /****************************************************
+  * Insert VerifyHeap code here
+  ****************************************************/
 
-  for (i = h -> n_elements - 1; i > 0; i--) {
-    if (! (h -> less(h -> heapdata[i], h -> heapdata[(i - 1) / 2])))
+  for (index = h->n_elements - 1; index > 0; index--)
+  {
+    if ((h->less)((h->heapdata)[(index - 1) / 2], (h->heapdata)[index]))
       return status;
   }
-  status = 1;
 
-  return status;
+  return status = 1;
 }
 
 /******************************************************************************
@@ -471,22 +464,24 @@ int VerifyHeap(Heap *h)
 
 void HeapSort(Heap *h)
 {
-  int n_temp = h -> n_elements;
+  int top = h->n_elements - 1, elements = h->n_elements;
+  Item temp;
 
-  if (VerifyHeap(h)) {
-    while (--(h -> n_elements) >= 0) {
-      exch(h -> heapdata[0], h -> heapdata[h -> n_elements]);
-      FixDown(h, 0);
-    }
+  /****************************************************
+  * Insert Sort code here
+  ****************************************************/
+  Heapify(h);
+
+  while (top > 0)
+  {
+    temp = (h->heapdata)[0];
+    (h->heapdata)[0] = (h->heapdata)[top];
+    (h->heapdata)[top] = temp;
+    h->n_elements--;
+    top--;
+    FixDown(h, 0);
   }
-  else {
-    Heapify(h);
-    while (--(h -> n_elements) >= 0) {
-      exch(h -> heapdata[0], h -> heapdata[h -> n_elements])
-      FixDown(h, 0);
-    }
-  }
-  h -> n_elements = n_temp;
+  h->n_elements = elements;
 
   return;
 }
@@ -504,10 +499,32 @@ void HeapSort(Heap *h)
 
 void Heapify(Heap *h)
 {
-  int i;
+  int aux;
+  /****************************************************
+   * Insert Heapify code here
+   ****************************************************/
+  if (VerifyHeap(h))
+    return;
 
-  for(i=(h->n_elements-1)/2;i>=0;i--)
-    FixDown(h,i);
+  for (aux = ((h->n_elements) / 2); aux >= 0; aux--)
+  {
+    FixDown(h, aux);
+  }
 
+  return;
+}
+
+void SortedPrioRemove(Heap *h, Item limit)
+{
+  int i, max_elements = h->n_elements - 1, elements_removed = 0;
+  HeapSort(h);
+  for (i = 0; i < max_elements && (h->less)(h->heapdata[i], limit); i++)
+  {
+    free(h->heapdata[i]);
+    h->n_elements--;
+    elements_removed++;
+  }
+  h->heapdata = &(h->heapdata[elements_removed]);
+  Heapify(h);
   return;
 }

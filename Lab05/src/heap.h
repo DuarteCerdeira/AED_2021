@@ -1,4 +1,3 @@
-
 /******************************************************************************
  *
  * File Name: heap.h
@@ -46,3 +45,7 @@ int VerifyHeap(Heap *h);
 void HeapSort(Heap *h);
 
 void Heapify(Heap *h);
+
+void PriorityRemove(Heap *h);
+
+void SortedPrioRemove(Heap *h, Item limit);
