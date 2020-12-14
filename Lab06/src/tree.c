@@ -182,8 +182,12 @@ void PreFixed(Node *root, int n)
 
 void InFixed(Node *root, int n)
 {
-
-  /* Insert code */
+  if (root != NULL) {
+    InFixed(root -> left, n + 1);
+    spaces(n);
+    printf("%d\n", root -> value);
+    InFixed(root -> right, n + 1);
+  }
 
   return;
 }
@@ -203,8 +207,12 @@ void InFixed(Node *root, int n)
 
 void PosFixed(Node *root, int n)
 {
-
-  /* Insert code */
+  if (root != NULL) {
+    PosFixed(root -> left, n + 1);
+    PosFixed(root -> right, n + 1);
+    spaces(n);
+    printf("%d\n", root -> value);
+  }
 
   return;
 }
@@ -224,8 +232,13 @@ void PosFixed(Node *root, int n)
 
 void sweepDepth(Node *root, int n)
 {
+  if (root == NULL)
+    return;
 
-  /* Insert code */
+  spaces(n);
+  printf("%d\n", root -> value);
+  sweepDepth(root -> left, n + 1);
+  sweepDepth(root -> right, n + 1);
 
   return;
 }
@@ -245,8 +258,21 @@ void sweepDepth(Node *root, int n)
 
 void sweepBreadth(Node *root)
 {
+  int n = 0;
+  Node *h = root;
+  Queue *q = QueueNew();
 
-  /* Insert code */
+  while (h != NULL) {
+    spaces(n);
+    printf("%d\n", h -> value);
+    if (h -> left)
+      InsertLast(q, h -> left);
+    if (h -> right)
+      InsertLast(q, h -> right);
+
+    h = GetFirst(q);
+  }
+  free(q);
 
   return;
 }
@@ -266,8 +292,17 @@ void sweepBreadth(Node *root)
 
 Boolean isTreeOrdered(Node * root)
 {
+  if (root == NULL)
+    return TRUE;
 
-  /* Insert code */
+  if (root -> left != NULL && root -> left -> value > root -> value)
+    return FALSE;
+
+  if (root -> right != NULL && root -> right -> value < root -> value)
+    return FALSE;
+
+  if (!isTreeOrdered(root -> left) || !isTreeOrdered(root -> right))
+    return FALSE;
 
   return TRUE;
 }
@@ -286,10 +321,38 @@ Boolean isTreeOrdered(Node * root)
  *
  *****************************************************************************/
 
+int TreeHeight(Node * root)
+{
+  int lh = 0, rh = 0;
+
+  if (root == NULL)
+   return 0;
+
+  lh = TreeHeight(root -> left);
+  rh = TreeHeight(root -> right);
+
+  return lh > rh ? lh + 1 : rh + 1;
+
+}
+
 Boolean isTreeBalanced(Node * root)
 {
+  int lh, rh;
 
-  /* Insert code */
+  if (root == NULL)
+    return TRUE;
+
+  if (root -> left == NULL && root -> right == NULL)
+    return TRUE;
+
+  lh = TreeHeight(root -> left);
+  rh = TreeHeight(root -> right);
+
+  if (lh - rh > 1 || lh - rh < -1)
+    return FALSE;
+
+  if (isTreeBalanced(root -> left) && isTreeBalanced(root -> right))
+    return TRUE;
 
   return FALSE;
 }

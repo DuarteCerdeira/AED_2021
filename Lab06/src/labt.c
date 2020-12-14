@@ -52,7 +52,6 @@ int main(int argc, char *argv[])
     PreFixed(root, 0);
     putchar('\n');
 
-/* Remove comments when implemented
     printf("\nIn-Fix:\n");
     InFixed(root, 0);
     putchar('\n');
@@ -78,7 +77,7 @@ int main(int argc, char *argv[])
         ynb = " ";
     else
         ynb = " not ";
-*/
+
     printf("The tree is%sordered.\n", yno);
     printf("The tree is%sbalanced.\n", ynb);
 
