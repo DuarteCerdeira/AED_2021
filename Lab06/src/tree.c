@@ -262,13 +262,19 @@ void sweepBreadth(Node *root)
   Node *h = root;
   Queue *q = QueueNew();
 
+  root -> level = 0;
   while (h != NULL) {
+    n = h -> level;
     spaces(n);
     printf("%d\n", h -> value);
-    if (h -> left)
+    if (h -> left) {
       InsertLast(q, h -> left);
-    if (h -> right)
+      h -> left -> level = n + 1;
+    }
+    if (h -> right) {
       InsertLast(q, h -> right);
+      h -> right -> level = n + 1;
+    }
 
     h = GetFirst(q);
   }
