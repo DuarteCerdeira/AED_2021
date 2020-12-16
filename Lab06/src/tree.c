@@ -296,23 +296,25 @@ void sweepBreadth(Node *root)
  *
  *****************************************************************************/
 
-Boolean isTreeOrdered(Node * root)
+
+Boolean isOrdered(Node *root, int min, int max)
 {
   if (root == NULL)
     return TRUE;
 
-  if (root -> left != NULL && root -> left -> value > root -> value)
+  if (root -> value < min || root -> value > max)
     return FALSE;
 
-  if (root -> right != NULL && root -> right -> value < root -> value)
-    return FALSE;
+  if (isOrdered(root -> left, min, root -> value) && isOrdered(root -> right, root -> value, max))
+    return TRUE;
 
-  if (!isTreeOrdered(root -> left) || !isTreeOrdered(root -> right))
-    return FALSE;
-
-  return TRUE;
+  return FALSE;
 }
 
+Boolean isTreeOrdered(Node * root)
+{
+  return isOrdered(root, INT_MIN, INT_MAX);
+}
 
 /******************************************************************************
  * IsTreeBalanced()
@@ -361,4 +363,39 @@ Boolean isTreeBalanced(Node * root)
     return TRUE;
 
   return FALSE;
+}
+
+void removeFirstLeaf(Node *root)
+{
+  Node *aux, *left, *right;
+  Queue *q;
+
+  if (root == NULL)
+    return;
+
+  aux = root;
+  q = QueueNew();
+
+  while (aux != NULL) {
+    left = aux -> left;
+    right = aux -> right;
+
+    if (left)
+      InsertLast(q, left);
+    if (right)
+      InsertLast(q, right);
+
+    if (left -> left == NULL && left -> right == NULL) {
+      aux -> left = NULL;
+      free(left);
+      return;
+    }
+    if (right -> left == NULL && right -> right == NULL) {
+      aux -> right = NULL;
+      free(right);
+      return;
+    }
+    
+    aux = GetFirst(q);
+  }
 }

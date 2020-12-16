@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
     root = Construct(fp, argv[1]);
     fclose(fp);
 
+    removeFirstLeaf(root);
+
     printf("\nPreFix dump:\n");
     PreFixed(root, 0);
     putchar('\n');

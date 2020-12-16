@@ -43,5 +43,6 @@ void sweepBreadth (Node *root);
 Boolean isTreeOrdered(Node *root);
 Boolean isTreeBalanced(Node *root);
 
+void removeFirstLeaf(Node *root);
 
 #endif
